@@ -5,13 +5,16 @@ const sequelize = require("./db");
 ipcMain.on("supplier-window-loaded", async function (event, pageNumber) {
     
   try {
-    const suppliers = await Supplier.findAll({
-      limit: 2,
-      offset: ((pageNumber - 1)*pageNumber),
+    const limit = 2;
+    const suppliers = await Supplier.findAndCountAll({
+      limit,
+      offset: ((pageNumber - 1)*limit),
     });
     const supplierArray = [];
-    suppliers.forEach(supplier => supplierArray.push(supplier.dataValues));
-    event.sender.send('fetched-suppliers', supplierArray);
+    const count = suppliers.count;
+    suppliers.rows.forEach(supplier => supplierArray.push(supplier.dataValues));
+    event.sender.send('fetched-suppliers', {supplierArray, count});
+    
   } catch (err) {
     dialog.showErrorBox("An error message", err.message);
   }
