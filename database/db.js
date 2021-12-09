@@ -5,6 +5,7 @@ var sequelize = new Sequelize(
     'password',
     {
       dialect: "sqlite",
+      logging: false,
       pool: {
         max: 5,
         min: 0,
