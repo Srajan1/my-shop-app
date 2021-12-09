@@ -9,14 +9,14 @@
         <a href="#" class="green-text" id="add-supplier-form-toggle"
           >Add new supplier</a
         >
-        <a href="#">Apply filters to search</a>
+        <a href="#"  id="filter-form-toggle">Apply filters to search</a>
       </div>
     </div>
-    <form method="GET" style="display: none">
+    <form id="adding-form" method="GET" style="display: none">
       <input
         type="text"
         id="supplier-name"
-        placeholder="Enter supplier name"
+        placeholder="Enter supplier name(mandatory)"
         required
       />
       <input
@@ -36,6 +36,26 @@
       />
       <button type="submit" id="save-supplier-details" class="btn">Save</button>
     </form>
+    <form style="padding: 15px 20px; display: none" id="filter-form" method="GET" class="row card">
+      <h6 class="center">
+        Apply search filters
+        <span class="grey-text">No filter is mandatory</span>
+      </h6>
+      <div class="col l4 left">
+        <input id ="filter-name" type="text" placeholder="name" />
+      </div>
+
+      <div class="col l4 center">
+        <input id ="filter-phone" type="number" placeholder="phone number" />
+      </div>
+
+      <div class="col l4 right">
+        <input id ="filter-address" type="text" placeholder="address" />
+      </div>
+      <div class="col center">
+        <button type="submit" id="filter-supplier-details" class="btn">Filter</button>
+      </div>
+    </form>
     <table class="striped">
       <thead>
         <th>Name</th>
@@ -45,17 +65,20 @@
         <th>Edit</th>
         <th>Delete</th>
       </thead>
-      <tbody id="table-body">
-      </tbody>
+      <tbody id="table-body"></tbody>
     </table>
     <div class="divider"></div>
-    <br>
-    <br>
-    <br>
+    <br />
+    <br />
+    <br />
     <ul class="pagination center">
-      <li id="prev-button"><a href="#!"><i class="material-icons"><</i></a></li>
-      <li class="active" ><a href="#!" id="current-page">page number</a></li>
-      <li id="next-button"><a href="#!"><i class="material-icons">></i></a></li>
+      <li>
+        <a id="prev-button" href="#!"><i class="material-icons"><</i></a>
+      </li>
+      <li class="active"><a href="#!" id="current-page">page number</a></li>
+      <li >
+        <a id="next-button" href="#!"><i class="material-icons">></i></a>
+      </li>
     </ul>
   </div>
 </div>
