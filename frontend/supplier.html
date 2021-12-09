@@ -1,0 +1,48 @@
+<div id="header"></div>
+<div id="content" class="row">
+  <div id="navbar"></div>
+
+  <div class="col l10">
+    <div class="card" ><h3 style="padding: 15px 20px">Suppliers</h3>
+        <div class="card-action">
+            <a href="#" class="green-text" id="add-supplier">Add new supplier</a>
+            <a href="#" >Apply filters to search</a>
+          </div>
+    </div>
+    <form method="GET" style="display: none;">
+      <input type="text" id="supplier-name" placeholder="Enter supplier name" required>
+      <input type="number" id="supplier-phone-number" placeholder="Enter supplier phone-number">
+      <input type="text" id="supplier-address" placeholder="Enter supplier address">
+      <input type="text" id="supplier-description" placeholder="Enter supplier description">
+      <button type="submit" id="save-supplier-details" class="btn">Save</button>
+    </form>
+    <table class="striped">
+      <thead>
+        <th>Name</th>
+        <th>Phone number</th>
+        <th>Address</th>
+        <th>View</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Srajan</td>
+          <td>7379519092</td>
+          <td>Holi nagar</td>
+          <td><button class="transparent btn" ><abbr title="View">🔍</abbr></button></td>
+          <td><button class="transparent btn" ><abbr title="Edit">📝</abbr></button></td>
+          <td><button class="transparent btn"><abbr title="Delete">❌</abbr></button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div id="footer"></div>
+
+<script>
+  require("./partials/header.js");
+  require("./partials/navbar.js");
+  require("./partials/footer.js");
+  require('./js/supplier.js')
+</script>

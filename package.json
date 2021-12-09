@@ -1,0 +1,22 @@
+{
+  "name": "my-shop",
+  "version": "1.0.0",
+  "description": "A desktop app to manage shop inventories",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "nodemon --exec electron .",
+    "rebuild": "electron-rebuild -f -w sqlite3"
+  },
+  "author": "srajan",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^16.0.4",
+    "electron-builder": "^22.14.5",
+    "electron-rebuild": "^3.2.5"
+  },
+  "dependencies": {
+    "sequelize": "^6.12.0-beta.1",
+    "sqlite3": "^5.0.2"
+  }
+}

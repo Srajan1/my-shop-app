@@ -1,0 +1,1 @@
+document.querySelector('#header').innerHTML = '<!DOCTYPE html><html lang="en"><head>    <meta charset="UTF-8">    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>    <title>My shop</title>      </head><body>';
