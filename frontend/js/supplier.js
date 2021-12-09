@@ -47,7 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const prevButton = document.querySelector("#prev-button");
   const nextButton = document.querySelector("#next-button");
+  
   prevButton.addEventListener("click", () => {
+    
     nextButton.classList.remove('disabled');
     if (pageNumber === 2) {
       prevButton.classList.add("disabled");
@@ -58,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
     prevButton.classList.add("disabled");
   }
   nextButton.addEventListener("click", () => {
+    
     prevButton.classList.remove("disabled");
     nextPage();
     if(pageNumber === totalPages)
@@ -87,5 +90,6 @@ ipcRenderer.on("fetched-suppliers", (event, suppliersInfo) => {
   totalPages = Math.floor(count/limit);
   if(count%limit != 0)
   ++totalPages;
-  console.log(`${totalPages} ${pageNumber}`);
+  const currentPage = document.querySelector('#current-page');
+  currentPage.innerText = `page ${pageNumber}`;
 });
