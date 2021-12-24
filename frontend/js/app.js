@@ -7,7 +7,6 @@ companyNameButton.addEventListener('click', () => {
     {
         alert('please enter a company name');
     }
-    else 
-    {console.log(name);}
+    
     document.querySelector('#company-name').value = '';
 })

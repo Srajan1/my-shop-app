@@ -1,0 +1,32 @@
+<div id="header"></div>
+<div id="content" class="row">
+  <div id="navbar"></div>
+
+  <div class="col l10">
+    <div style="padding: 15px 20px" class="card">
+      <h3>Metrics</h3>
+        <h6>Metrics determine the units in which you will sell the product, these might be kg, litres, nag or any other unit</h6>
+    </div>
+    <form id="add-metric-form">
+        <input type="text" id="add-metric-name" placeholder="Input your metric(mandatory)" required>
+        <input type="text" id="add-metric-desc" placeholder="Any description">
+        <button id="add-metric-button" class="btn" type="submit">Add</button>
+    </form>
+    <table class="striped">
+      <thead>
+        <th>Name</th>
+        <th>Description</th>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script>
+  require("./partials/header.js");
+  require("./partials/navbar.js");
+  require("./partials/footer.js");
+  require("./js/metric.js");
+</script>

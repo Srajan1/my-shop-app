@@ -44,7 +44,7 @@ document
     if (filterName) where.name = filterName;
     if (filterPhone) where.phone = filterPhone;
     if (filterAddress) where.address = filterAddress;
-    console.log(where);
+    
     document.querySelector("#filter-name").value = "";
     document.querySelector("#filter-phone").value = "";
     document.querySelector("#filter-address").value = "";
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (pageNumber === 1) prevButton.style.pointerEvents = "none";
   else prevButton.style.pointerEvents = "auto";
-
+  if (pageNumber === totalPages) nextButton.style.pointerEvents = "none";
   prevButton.addEventListener("click", () => {
     previousPage();
     if (pageNumber === 1) prevButton.style.pointerEvents = "none";
@@ -97,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 ipcRenderer.on("supplier-added", (evt, result) => {
+  alert('Supplier has been added');
   ipcRenderer.send("supplier-window-loaded", { pageNumber, where });
 });
 

@@ -7,14 +7,14 @@ ipcMain.on("supplier-window-loaded", async function (event, query) {
     const pageNumber = query.pageNumber;
     const where ={};
     query = query.where;
-    console.log(query);
+    
     if(query.name != null)
     where.name = { [Op.like]: '%' + query.name + '%'};
     if(query.address != null)
     where.address = { [Op.like]: '%' + query.address + '%'};
     if(query.phone != null)
     where.phoneNumber = { [Op.like]: '%' + query.phone + '%'};
-    console.log(where);
+    
   try {
     
     const limit = 20;
