@@ -24,6 +24,7 @@ Supplier.init({
     }
   }, {
     sequelize,
+    tableName: 'suppliers', freezeTableName: true 
   })
   
   module.exports = Supplier;

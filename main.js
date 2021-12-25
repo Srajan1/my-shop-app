@@ -2,6 +2,7 @@ const { app, BrowserWindow } = require("electron");
 const sequelize = require("./database/db.js");
 const supplier = require('./database/supplierController')
 const metric = require('./database/metricController')
+const item = require('./database/itemController')
 sequelize
   .sync()
   .then(() => {

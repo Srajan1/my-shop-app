@@ -1,0 +1,47 @@
+<div id="header"></div>
+<div id="content" class="row">
+  <div id="navbar"></div>
+
+  <div class="col l10">
+    <div style="padding: 15px 20px" class="card">
+      <h3>Items</h3>
+      <h6>List of all the items in your inventory</h6>
+    </div>
+    <form method="GET" id="add-item-form">
+      <input
+        type="text"
+        id="item-name"
+        placeholder="Enter item name(mandatory)"
+        required
+      />
+
+      <select class="browser-default" id="item-metric-dropdown"></select>
+      <input
+        type="number"
+        id="item-available"
+        placeholder="Item available in stock"
+      />
+      <button class="btn" id="add-item-button">Add item</button>
+    </form>
+    <table class="striped">
+      <thead>
+        <th>Name</th>
+        <th>Metric</th>
+        <th>In Stock</th>
+        <th>View</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script>
+  require("./partials/header.js");
+  require("./partials/navbar.js");
+  require("./partials/footer.js");
+  require("./js/item.js");
+</script>
