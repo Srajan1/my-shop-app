@@ -6,6 +6,7 @@ const { Op } = require('sequelize');
 ipcMain.on("supplier-window-loaded", async function (event, query) {
     const pageNumber = query.pageNumber;
     const where ={};
+    const limit = query.limit;
     query = query.where;
     
     if(query.name != null)
@@ -17,7 +18,7 @@ ipcMain.on("supplier-window-loaded", async function (event, query) {
     
   try {
     
-    const limit = 20;
+    
     const suppliers = await Supplier.findAndCountAll({
       limit,
       offset: ((pageNumber - 1)*limit),

@@ -23,15 +23,15 @@ const saveSupplier = async function (e) {
   ipcRenderer.send("add-supplier", supplier);
 };
 
-const previousPage = function () {
+const prevButton = document.querySelector('#prev-button').addEventListener('click', () => {
   --pageNumber;
-  ipcRenderer.send("supplier-window-loaded", { pageNumber, where });
-};
+  ipcRenderer.send("supplier-window-loaded", {pageNumber, where, limit});
+})
 
-const nextPage = function () {
+const nextButton = document.querySelector('#next-button').addEventListener('click', () => {
   ++pageNumber;
-  ipcRenderer.send("supplier-window-loaded", { pageNumber, where });
-};
+  ipcRenderer.send("supplier-window-loaded", {pageNumber, where, limit});
+})
 
 document
   .querySelector("#filter-supplier-details")
@@ -48,11 +48,11 @@ document
     document.querySelector("#filter-name").value = "";
     document.querySelector("#filter-phone").value = "";
     document.querySelector("#filter-address").value = "";
-    ipcRenderer.send("supplier-window-loaded", { pageNumber, where });
+    ipcRenderer.send("supplier-window-loaded", { pageNumber, where, limit });
   });
 
 document.addEventListener("DOMContentLoaded", () => {
-  ipcRenderer.send("supplier-window-loaded", { pageNumber, where });
+  ipcRenderer.send("supplier-window-loaded", { pageNumber, where, limit });
   const addSupplierFormToggle = document.querySelector(
     "#add-supplier-form-toggle"
   );
@@ -73,32 +73,14 @@ document.addEventListener("DOMContentLoaded", () => {
     else document.querySelector("#filter-form").style.display = "none";
   });
 
-  const prevButton = document.querySelector("#prev-button");
-  const nextButton = document.querySelector("#next-button");
 
-  if (pageNumber === 1) prevButton.style.pointerEvents = "none";
-  else prevButton.style.pointerEvents = "auto";
-  if (pageNumber === totalPages) nextButton.style.pointerEvents = "none";
-  prevButton.addEventListener("click", () => {
-    previousPage();
-    if (pageNumber === 1) prevButton.style.pointerEvents = "none";
-    else prevButton.style.pointerEvents = "auto";
-
-  });
-  if (pageNumber === 1) {
-    prevButton.style.pointerEvents = "none";
-  }
-  nextButton.addEventListener("click", () => {
-    nextPage();
-    if (pageNumber === 1) prevButton.style.pointerEvents = "none";
-    else prevButton.style.pointerEvents = "auto";
-    if (pageNumber === totalPages) nextButton.style.pointerEvents = "none";
-  });
+  
+  
 });
 
 ipcRenderer.on("supplier-added", (evt, result) => {
   alert('Supplier has been added');
-  ipcRenderer.send("supplier-window-loaded", { pageNumber, where });
+  ipcRenderer.send("supplier-window-loaded", { pageNumber, where, limit });
 });
 
 ipcRenderer.on("fetched-suppliers", (event, suppliersInfo) => {
@@ -106,6 +88,12 @@ ipcRenderer.on("fetched-suppliers", (event, suppliersInfo) => {
     count = suppliersInfo.count;
   const tableBody = document.querySelector("#table-body");
   tableBody.innerHTML = "";
+  totalPages = Math.ceil(count / limit);
+  if(pageNumber === 1)
+  document.querySelector('#prev-button').style.pointerEvents = "none";
+  else document.querySelector('#prev-button').style.pointerEvents = "auto";
+  if (pageNumber === totalPages) document.querySelector('#next-button').style.pointerEvents = "none";
+  else document.querySelector('#next-button').style.pointerEvents = "auto";
   suppliers.forEach((supplier) => {
     var row = document.createElement("tr");
     row.innerHTML = `<tr><td>${supplier.name}</td>

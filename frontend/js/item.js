@@ -1,9 +1,17 @@
 const electron = require("electron");
 const ipcRenderer = electron.ipcRenderer;
-
+var totalPages, perPage = 20, pageNumber = 1;
 ipcRenderer.on('item-metric-list-fetched', (event, data) => {
+  document.querySelector('#current-page').innerText = pageNumber;
   metrics = data.metricArray;
   items = data.itemArray;
+  const {itemCount} = data;
+  totalPages = Math.ceil(itemCount / perPage);
+  if(pageNumber === 1)
+  document.querySelector('#prev-button').style.pointerEvents = "none";
+  else document.querySelector('#prev-button').style.pointerEvents = "auto";
+  if (pageNumber === totalPages) document.querySelector('#next-button').style.pointerEvents = "none";
+  else document.querySelector('#next-button').style.pointerEvents = "auto";
     const dropdown = document.querySelector('#item-metric-dropdown');
     dropdown.innerHTML = '';
     metrics.forEach(metric => {
@@ -31,6 +39,16 @@ ipcRenderer.on('item-added', (event) => {
   alert("New item has been added");
 })
 
+const prevButton = document.querySelector('#prev-button').addEventListener('click', () => {
+  --pageNumber;
+  ipcRenderer.send("item-window-loaded", {pageNumber, perPage});
+})
+
+const nextButton = document.querySelector('#next-button').addEventListener('click', () => {
+  ++pageNumber;
+  ipcRenderer.send("item-window-loaded", {pageNumber, perPage});
+})
+
 const addItemButton = document.querySelector('#add-item-button');
 addItemButton.addEventListener('click', (e) => {
   const itemName = document.querySelector('#item-name').value;
@@ -45,6 +63,6 @@ addItemButton.addEventListener('click', (e) => {
 })
 
 document.addEventListener("DOMContentLoaded", function () {
-  ipcRenderer.send("item-window-loaded");
+  ipcRenderer.send("item-window-loaded", {pageNumber, perPage});
 
 });
