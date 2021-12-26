@@ -12,13 +12,13 @@ ipcMain.on("add-metric", async (event, metric) => {
   }
 });
 
-ipcMain.on('metric-window-loaded', async(event) => {
-    try{
-        const metrics = await Metric.findAll();
-        const metricArray = [];
-        metrics.forEach(metric => metricArray.push(metric.dataValues));
-        event.sender.send('metric-list-fetched', metricArray);
-    }catch(err){
-        dialog.showErrorBox("An error message", err.message);
-    }
-})
+ipcMain.on("metric-window-loaded", async (event) => {
+  try {
+    const metrics = await Metric.findAll();
+    const metricArray = [];
+    metrics.forEach((metric) => metricArray.push(metric.dataValues));
+    event.sender.send("metric-list-fetched", metricArray);
+  } catch (err) {
+    dialog.showErrorBox("An error message", err.message);
+  }
+});

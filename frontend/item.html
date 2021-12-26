@@ -3,11 +3,14 @@
   <div id="navbar"></div>
 
   <div class="col l10">
-    <div style="padding: 15px 20px" class="card">
-      <h3>Items</h3>
-      <h6>List of all the items in your inventory</h6>
+    <div class="card">
+      <h3 style="padding: 15px 20px">Items</h3>
+      <div class="card-action">
+        <a href="#" class="green-text" id="add-form-toggle">Add new Item</a>
+        <a href="#" id="filter-form-toggle">Apply filters to search</a>
+      </div>
     </div>
-    <form method="GET" id="add-item-form">
+    <form method="GET" id="add-item-form" style="display: none">
       <input
         type="text"
         id="item-name"
@@ -22,6 +25,15 @@
         placeholder="Item available in stock"
       />
       <button class="btn" id="add-item-button">Add item</button>
+    </form>
+    <form id="filter-item-form" style="display: none">
+      <input
+        type="text"
+        required
+        placeholder="Enter name of item"
+        id="filter-item-input"
+      />
+      <button class="btn" id="filter-button">Search</button>
     </form>
     <table class="striped">
       <thead>
@@ -39,7 +51,7 @@
         <a id="prev-button" href="#!"><i class="material-icons"><</i></a>
       </li>
       <li class="active"><a href="#!" id="current-page">page number</a></li>
-      <li >
+      <li>
         <a id="next-button" href="#!"><i class="material-icons">></i></a>
       </li>
     </ul>

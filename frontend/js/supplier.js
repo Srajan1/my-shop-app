@@ -23,15 +23,19 @@ const saveSupplier = async function (e) {
   ipcRenderer.send("add-supplier", supplier);
 };
 
-const prevButton = document.querySelector('#prev-button').addEventListener('click', () => {
-  --pageNumber;
-  ipcRenderer.send("supplier-window-loaded", {pageNumber, where, limit});
-})
+const prevButton = document
+  .querySelector("#prev-button")
+  .addEventListener("click", () => {
+    --pageNumber;
+    ipcRenderer.send("supplier-window-loaded", { pageNumber, where, limit });
+  });
 
-const nextButton = document.querySelector('#next-button').addEventListener('click', () => {
-  ++pageNumber;
-  ipcRenderer.send("supplier-window-loaded", {pageNumber, where, limit});
-})
+const nextButton = document
+  .querySelector("#next-button")
+  .addEventListener("click", () => {
+    ++pageNumber;
+    ipcRenderer.send("supplier-window-loaded", { pageNumber, where, limit });
+  });
 
 document
   .querySelector("#filter-supplier-details")
@@ -44,7 +48,7 @@ document
     if (filterName) where.name = filterName;
     if (filterPhone) where.phone = filterPhone;
     if (filterAddress) where.address = filterAddress;
-    
+
     document.querySelector("#filter-name").value = "";
     document.querySelector("#filter-phone").value = "";
     document.querySelector("#filter-address").value = "";
@@ -72,14 +76,10 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelector("#filter-form").style.display = "block";
     else document.querySelector("#filter-form").style.display = "none";
   });
-
-
-  
-  
 });
 
 ipcRenderer.on("supplier-added", (evt, result) => {
-  alert('Supplier has been added');
+  alert("Supplier has been added");
   ipcRenderer.send("supplier-window-loaded", { pageNumber, where, limit });
 });
 
@@ -89,11 +89,12 @@ ipcRenderer.on("fetched-suppliers", (event, suppliersInfo) => {
   const tableBody = document.querySelector("#table-body");
   tableBody.innerHTML = "";
   totalPages = Math.ceil(count / limit);
-  if(pageNumber === 1)
-  document.querySelector('#prev-button').style.pointerEvents = "none";
-  else document.querySelector('#prev-button').style.pointerEvents = "auto";
-  if (pageNumber === totalPages) document.querySelector('#next-button').style.pointerEvents = "none";
-  else document.querySelector('#next-button').style.pointerEvents = "auto";
+  if (pageNumber === 1)
+    document.querySelector("#prev-button").style.pointerEvents = "none";
+  else document.querySelector("#prev-button").style.pointerEvents = "auto";
+  if (pageNumber === totalPages)
+    document.querySelector("#next-button").style.pointerEvents = "none";
+  else document.querySelector("#next-button").style.pointerEvents = "auto";
   suppliers.forEach((supplier) => {
     var row = document.createElement("tr");
     row.innerHTML = `<tr><td>${supplier.name}</td>
