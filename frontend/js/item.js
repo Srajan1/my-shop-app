@@ -1,9 +1,20 @@
 const electron = require("electron");
 const ipcRenderer = electron.ipcRenderer;
 var totalPages,
-  perPage = 2,
+  perPage = 20,
   pageNumber = 1,
   where = {};
+
+const manageFunction = () => {
+  const manageButton = document.querySelectorAll('.manage-button')
+  var i;
+  for (i = 0; i < manageButton.length; i++) {
+    manageButton[i].onclick = function () {
+      sessionStorage.setItem("itemId", this.id);
+    };
+  }
+};
+
 ipcRenderer.on("item-metric-list-fetched", (event, data) => {
   document.querySelector("#current-page").innerText = pageNumber;
   metrics = data.metricArray;
@@ -31,11 +42,10 @@ ipcRenderer.on("item-metric-list-fetched", (event, data) => {
     row.innerHTML = `<tr><td>${item.name}</td>
       <td>${item.Metric.dataValues.name}</td>
       <td>${item.available}</td>
-      <td><button class="transparent btn"  id="${item.id}_view"><abbr title="View">🔍</abbr></button></td>
-      <td><button class="transparent btn"  id="${item.id}_edit"><abbr title="Edit">📝</abbr></button></td>
-      <td><button class="transparent btn"  id="${item.id}_delete"><abbr title="Delete">❌</abbr></button></td></tr>`;
+      <td><a href="itemSpecific.html" class="transparent btn manage-button" id="${item.id}"><abbr title="View">📝</abbr></a></td></tr>`;
     tableBody.appendChild(row);
   });
+  manageFunction();
 });
 
 ipcRenderer.on("item-added", (event) => {
@@ -46,6 +56,7 @@ const prevButton = document
   .querySelector("#prev-button")
   .addEventListener("click", () => {
     --pageNumber;
+
     ipcRenderer.send("item-window-loaded", { pageNumber, perPage, where });
   });
 
@@ -53,6 +64,7 @@ const nextButton = document
   .querySelector("#next-button")
   .addEventListener("click", () => {
     ++pageNumber;
+
     ipcRenderer.send("item-window-loaded", { pageNumber, perPage, where });
   });
 
@@ -66,6 +78,7 @@ document.querySelector("#filter-button").addEventListener("click", (e) => {
   e.preventDefault();
   const name = document.querySelector("#filter-item-input").value;
   where.name = name;
+
   ipcRenderer.send("item-window-loaded", { pageNumber, perPage, where });
 });
 

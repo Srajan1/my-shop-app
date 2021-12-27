@@ -33,5 +33,5 @@ Item.init(
     freezeTableName: true,
   }
 );
-
+Item.belongsTo(Metric)
 module.exports = Item;

@@ -1,0 +1,34 @@
+<div id="header"></div>
+<div id="content" class="row">
+  <div id="navbar"></div>
+
+  <div class="col l10">
+    <div style="padding: 15px 20px" class="card">
+      <h3>Item details</h3>
+    </div>
+    <form class="row" id="update-item-form">
+      <div class="col l4">
+        <label for="item-name-input">Name</label>
+        <input type="text" id="item-name-input" />
+      </div>
+      <div class="col l4">
+        <label for="item-metric-dropdown">Metric</label>
+        <select class="browser-default" id="item-metric-dropdown"></select>
+      </div>
+      <div class="col l4">
+        <label for="item-in-stock">In Stock</label>
+        <input type="number" id="item-in-stock" />
+      </div>
+      <button id="update-item-button" class="btn">Update</button>
+    </form>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script>
+  require("./partials/header.js");
+  require("./partials/navbar.js");
+  require("./partials/footer.js");
+  require("./js/itemSpecific.js");
+</script>

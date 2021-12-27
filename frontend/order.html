@@ -1,0 +1,32 @@
+<div id="header"></div>
+<div id="content" class="row">
+  <div id="navbar"></div>
+
+  <div class="col l10">
+    <div class="card">
+      <h3 style="padding: 15px 20px">Orders</h3>
+      <div class="card-action">
+        <a href="#" id="filter-form-toggle">Apply filters to search</a>
+      </div>
+    </div>
+    <form id="Add order">
+      <div class="col l6">
+        <label for="supplier-dropdown">Select supplier</label>
+        <select class="browser-default" id="supplier-dropdown"></select>
+      </div>
+      <div class="col l6">
+        <label for="date">Expected arrival date</label>
+        <input type="date" id="date" />
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script>
+  require("./partials/header.js");
+  require("./partials/navbar.js");
+  require("./partials/footer.js");
+  require("./js/metric.js");
+</script>

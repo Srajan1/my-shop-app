@@ -24,5 +24,5 @@ Metric.init(
     tableName: 'metrics', freezeTableName: true 
   }
 );
-Item.Metric = Item.belongsTo(Metric)
+
 module.exports = Metric;
