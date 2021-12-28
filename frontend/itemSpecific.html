@@ -4,7 +4,7 @@
 
   <div class="col l10">
     <div style="padding: 15px 20px" class="card">
-      <h3>Item details</h3>
+      <h3 id="heading"></h3>
     </div>
     <form class="row" id="update-item-form">
       <div class="col l4">
@@ -21,6 +21,33 @@
       </div>
       <button id="update-item-button" class="btn">Update</button>
     </form>
+    <div class="row">
+      <div class="col l5 left">
+        <h4>Cost price list</h4>
+        <table class="striped">
+          <thead>
+            <th>From</th>
+            <th>To</th>
+            <th>Price</th>
+          </thead>
+          <tbody id="cost-price-body"></tbody>
+        </table>
+        <button class="btn" type="submit" id="save-cost-price">Save</button>
+      </div>
+      <div class="col l5 right">
+        <h4>Selling price list</h4>
+        <table class="striped">
+          <thead>
+            <th>From</th>
+            <th>To</th>
+            <th>Price</th>
+          </thead>
+          
+          <tbody id="selling-price-body"></tbody>
+        </table>
+        <button class="btn" type="submit" id="save-selling-price">Save</button>
+      </div>
+    </div>
   </div>
 </div>
 
