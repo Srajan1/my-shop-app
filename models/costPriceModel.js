@@ -14,6 +14,10 @@ const CostPrice = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    current: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
     fromDate: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,

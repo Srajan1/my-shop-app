@@ -107,7 +107,7 @@ document.querySelector('#save-selling-price').addEventListener('click', () => {
     itemId
   };
   document.getElementById("save-selling-price").disabled = true;
-  ipcRenderer.send('save-selling-price', sellingPrice);
+  ipcRenderer.send('save-selling-price', {sellingPrice, itemId});
   ipcRenderer.send("item-specific-window-loaded", itemId);
 })
 
@@ -119,7 +119,7 @@ document.querySelector('#save-cost-price').addEventListener('click', () => {
     itemId
   };
   document.getElementById("save-cost-price").disabled = true;
-  ipcRenderer.send('save-cost-price', costPrice);
+  ipcRenderer.send('save-cost-price', {costPrice, itemId});
   ipcRenderer.send("item-specific-window-loaded", itemId);
 })
 

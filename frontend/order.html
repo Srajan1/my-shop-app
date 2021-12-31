@@ -1,4 +1,5 @@
 <div id="header"></div>
+<style></style>
 <div id="content" class="row">
   <div id="navbar"></div>
 
@@ -6,17 +7,50 @@
     <div class="card">
       <h3 style="padding: 15px 20px">Orders</h3>
       <div class="card-action">
-        <a href="#" id="filter-form-toggle">Apply filters to search</a>
+        <a href="#" class="green-text" id="place-order-form-toggle"
+          >Place an order</a
+        >
       </div>
     </div>
-    <form id="Add order">
-      <div class="col l6">
+
+    <form id="add-order">
+      <div class="col l4">
         <label for="supplier-dropdown">Select supplier</label>
         <select class="browser-default" id="supplier-dropdown"></select>
       </div>
-      <div class="col l6">
+      <div class="col l4">
         <label for="date">Expected arrival date</label>
-        <input type="date" id="date" />
+        <input type="date" id="expected-date-input" id="date" />
+      </div>
+      <div class="col l4">
+        <label for="date">Order placed on</label>
+        <input type="date" id="placed-date-input" id="date" />
+      </div>
+      <table class="striped">
+        <thead>
+          <th>Item name</th>
+          <th>Quantity</th>
+          <th>Price per unit</th>
+          <th>Total Price</th>
+          <th>Remove</th>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+      <div class="row">
+        <div>
+          <button class="btn" id="add-another-item">Add another item</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col l3 right">
+          <!-- <div style="display: none;"> -->
+            <label for="money-paid">Already paid</label>
+            <input type="number" id="money-paid" required placeholder="How much have already you paid?"/>
+            <label for="total-order-value">Total remaining</label>
+            <input type="number" id="total-order-value" readonly />
+          <!-- </div> -->
+          <button class="btn" id="place-the-order">Place order</button>
+        </div>
       </div>
     </form>
   </div>
@@ -28,5 +62,5 @@
   require("./partials/header.js");
   require("./partials/navbar.js");
   require("./partials/footer.js");
-  require("./js/metric.js");
+  require("./js/order.js");
 </script>

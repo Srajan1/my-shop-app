@@ -15,13 +15,16 @@ const Order = sequelize.define('Order', {
         type: DataTypes.INTEGER,
         defaultValue: 0,
       },
+      settled: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
     orderPlacedDate: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
+        defaultValue: DataTypes.NOW,
     },
     orderExpectedDate:{
         type: DataTypes.DATE,
-        allowNull: false
     }
   },
   {

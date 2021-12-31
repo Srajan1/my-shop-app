@@ -30,30 +30,36 @@ ipcMain.on("item-specific-window-loaded", async (event, itemId) => {
   }
 });
 
-ipcMain.on("save-selling-price", async (event, data) => {
+ipcMain.on("save-selling-price", async (event, recievedData) => {
   try {
+    const itemId = recievedData.itemId, data = recievedData.sellingPrice;
     const previousInstance = await SellingPrice.findOne({
       where: {
-        toDate: null
+        itemId,
+        current: 1
     }
     });
+    data.current = 1;
     if(previousInstance)
-    await SellingPrice.update({toDate: Date()}, {where: {id: previousInstance.dataValues.id}})
+    await SellingPrice.update({toDate: Date(), current: 0}, {where: {id: previousInstance.dataValues.id}})
     await SellingPrice.create(data);
   } catch (err) {
     dialog.showErrorBox("An error message", err.message);
   }
 });
 
-ipcMain.on("save-cost-price", async (event, data) => {
+ipcMain.on("save-cost-price", async (event, recievedData) => {
   try {
+    const itemId = recievedData.itemId, data = recievedData.costPrice;
     const previousInstance = await CostPrice.findOne({
       where: {
-        toDate: null
+        itemId,
+        current: 1
     }
     });
+    data.current = 1;
     if(previousInstance)
-    await CostPrice.update({toDate: Date()}, {where: {id: previousInstance.dataValues.id}})
+    await CostPrice.update({toDate: Date(), current: 0}, {where: {id: previousInstance.dataValues.id}})
     await CostPrice.create(data);
   } catch (err) {
     dialog.showErrorBox("An error message", err.message);
