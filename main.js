@@ -4,7 +4,8 @@ const order = require('./database/orderController')
 const supplier = require('./database/supplierController')
 const metric = require('./database/metricController')
 const item = require('./database/itemController')
-const itemSpecific = require('./database/itemSpecificController')
+const itemSpecific = require('./database/itemSpecificController');
+require('./utilities')
 sequelize
   .sync()
   .then(() => {

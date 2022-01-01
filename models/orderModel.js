@@ -1,7 +1,9 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
-const Supplier = require('./supplierModel')
-const Order = sequelize.define('Order', {
+const Supplier = require("./supplierModel");
+const Order = sequelize.define(
+  "Order",
+  {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -9,23 +11,23 @@ const Order = sequelize.define('Order', {
     },
     total: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     paid: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
-      },
-      settled: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
-      },
-    orderPlacedDate: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
     },
-    orderExpectedDate:{
-        type: DataTypes.DATE,
-    }
+    settled: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    orderPlacedDate: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    orderExpectedDate: {
+      type: DataTypes.DATE,
+    },
   },
   {
     sequelize,
@@ -34,5 +36,5 @@ const Order = sequelize.define('Order', {
   }
 );
 
-Order.belongsTo(Supplier, {foreignKey: 'supplierId', targetKey: 'id'});
+Order.belongsTo(Supplier, { foreignKey: "supplierId", targetKey: "id" });
 module.exports = Order;
