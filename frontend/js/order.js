@@ -205,8 +205,16 @@ document.addEventListener("DOMContentLoaded", () => {
 const sendData = () => {
   const total = document.querySelector("#total-order-value").value;
   const paid = document.querySelector("#money-paid").value;
-  const expectedDate = document.querySelector("#expected-date-input").value;
-  const placedDate = document.querySelector("#placed-date-input").value;
+  const orderExpectedDate = document.querySelector("#expected-date-input").value;
+  const orderPlacedDate = document.querySelector("#placed-date-input").value;
+  const supplierId =  document.querySelector('#supplier-dropdown').value;
+  const order = {
+    total, 
+    paid, 
+    orderExpectedDate, 
+    orderPlacedDate,
+    supplierId
+  };
   const itemList = document.querySelectorAll(".item-list");
   const allItems = [];
   itemList.forEach((item) => {
@@ -215,5 +223,5 @@ const sendData = () => {
     const price = item.children[3].children[0].value;
     allItems.push({ itemId, quantity, price });
   });
-  console.log(allItems);
+  ipcRenderer.send('place-order', {allItems, order});
 };

@@ -23,3 +23,15 @@ ipcMain.on("order-window-loaded", async (event) => {
     dialog.showErrorBox("An error message", err.message);
   }
 });
+
+ipcMain.on('place-order', async (event, data) => {
+  try{
+    const allItems = data.allItems, orderData = data.order;
+    const order = await Order.create(orderData);
+    const orderId = order.dataValues.id;
+    allItems.forEach(item => item.orderId = orderId);
+    await OrderItemJunction.bulkCreate(allItems);
+  }catch(err){
+    dialog.showErrorBox("An error message", err.message);
+  }
+})
