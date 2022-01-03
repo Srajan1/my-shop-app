@@ -44,28 +44,46 @@
       <div class="row">
         <div class="col l3 right">
           <!-- <div style="display: none;"> -->
-            <label for="money-paid">Already paid</label>
-            <input type="number" id="money-paid" required placeholder="How much have already you paid?" value=0/>
-            <label for="total-order-value">Total remaining</label>
-            <input type="number" id="total-order-value" readonly />
+          <label for="money-paid">Already paid</label>
+          <input
+            type="number"
+            id="money-paid"
+            required
+            placeholder="How much have already you paid?"
+            value="0"
+          />
+          <label for="total-order-value">Total remaining</label>
+          <input type="number" id="total-order-value" readonly />
           <!-- </div> -->
           <button class="btn" id="place-the-order">Place order</button>
         </div>
       </div>
     </form>
-    <table id="order-table" style="visibility: hidden;">
-      <thead>
-        <th>Supplier</th>
-        <th>Remaining</th>
-        <th>Paid</th>
-        <th>Total</th>
-        <th>Settled</th>
-        <th>Order placed</th>
-        <th>Order Expected on</th>
-        <th>Manage</th>
-      </thead>
-      <tbody id="all-order-table"></tbody>
-    </table>
+    <div id="order-table" style="visibility: hidden">
+      <button class="btn" id="settled-order-view">Show only pending orders</button>
+      <table>
+        <thead>
+          <th>Supplier</th>
+          <th>Remaining</th>
+          <th>Paid</th>
+          <th>Total</th>
+          <th>Settled</th>
+          <th>Order placed</th>
+          <th>Order Expected on</th>
+          <th>Manage</th>
+        </thead>
+        <tbody id="all-order-table"></tbody>
+      </table>
+      <ul class="pagination center">
+        <li>
+          <a id="prev-button" href="#!"><i class="material-icons"><</i></a>
+        </li>
+        <li class="active"><a href="#!" id="current-page"></a></li>
+        <li>
+          <a id="next-button" href="#!"><i class="material-icons">></i></a>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 

@@ -8,11 +8,11 @@ const CostPrice = require('../models/costPriceModel');
 
 ipcMain.on('fetch-all-orders', async(event, data) => {
   try{
-    const {where, limit, page} = data;
-    const orders = await Order.findAll({where, limit, offset: (page-1)*limit, include: [Supplier], order: [["createdAt", "DESC"]],});
+    const {where, limit, pageNumber} = data;
+    const orders = await Order.findAndCountAll({where, limit, offset: (pageNumber-1)*limit, include: [Supplier], order: [["createdAt", "DESC"]],});
     const orderArray = [];
-    orders.forEach(order => orderArray.push(order.dataValues))
-    event.sender.send('orders-fetched', orderArray);
+    orders.rows.forEach(order => orderArray.push(order.dataValues))
+    event.sender.send('orders-fetched', {orderArray, count: orders.count});
   }catch(err){
     dialog.showErrorBox("An error message", err.message);
   }
