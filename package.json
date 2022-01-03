@@ -4,9 +4,11 @@
   "description": "A desktop app to manage shop inventories",
   "main": "main.js",
   "scripts": {
+    "postinstall": "install-app-deps",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "nodemon --exec electron .",
-    "rebuild": "electron-rebuild -f -w sqlite3"
+    "rebuild": "electron-rebuild -f -w sqlite3",
+    "dist": "electron-builder"
   },
   "author": "srajan",
   "license": "MIT",
@@ -20,5 +22,17 @@
     "moment": "^2.29.1",
     "sequelize": "^6.12.0-beta.1",
     "sqlite3": "^5.0.2"
+  },
+  "build": {
+    "appId": "com.srajan.app",
+    "productName": "Sample app",
+    "target": "NSIS",
+    "extraResources": [
+      "databaseFolder"
+    ],
+    "nsis": {
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false
+    }
   }
 }

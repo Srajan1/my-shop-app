@@ -23,6 +23,7 @@ ipcMain.on("item-window-loaded", async (event, queryData) => {
     metrics.forEach((metric) => metricArray.push(metric.dataValues));
     items.rows.forEach((item) => itemArray.push(item.dataValues));
     const itemCount = items.count;
+    console.log(itemArray);
     event.sender.send("item-metric-list-fetched", {
       metricArray,
       itemArray,
@@ -35,6 +36,7 @@ ipcMain.on("item-window-loaded", async (event, queryData) => {
 
 ipcMain.on("add-item", async (event, item) => {
   try {
+    console.log(item);
     await Item.create(item);
     event.sender.send("item-added");
   } catch (err) {
