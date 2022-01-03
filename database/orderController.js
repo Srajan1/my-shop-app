@@ -6,6 +6,18 @@ const Supplier = require("../models/supplierModel");
 const Item = require("../models/itemModel");
 const CostPrice = require('../models/costPriceModel');
 
+ipcMain.on('fetch-all-orders', async(event, data) => {
+  try{
+    const {where, limit, page} = data;
+    const orders = await Order.findAll({where, limit, offset: (page-1)*limit, include: [Supplier], order: [["createdAt", "DESC"]],});
+    const orderArray = [];
+    orders.forEach(order => orderArray.push(order.dataValues))
+    event.sender.send('orders-fetched', orderArray);
+  }catch(err){
+    dialog.showErrorBox("An error message", err.message);
+  }
+})
+
 ipcMain.on("order-window-loaded", async (event) => {
   try {
     const suppliers = await Supplier.findAll({order: [["name", "ASC"]],});
@@ -31,6 +43,7 @@ ipcMain.on('place-order', async (event, data) => {
     const orderId = order.dataValues.id;
     allItems.forEach(item => item.orderId = orderId);
     await OrderItemJunction.bulkCreate(allItems);
+    event.sender.send('order-placed');
   }catch(err){
     dialog.showErrorBox("An error message", err.message);
   }

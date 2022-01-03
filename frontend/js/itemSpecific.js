@@ -96,7 +96,7 @@ ipcRenderer.on("prices-fetched", (event, data) => {
 });
 
 ipcRenderer.on("item-updated", () => {
-  alert("item has been updated");
+  ipcRenderer.send('show message', {heading: 'Item updated', message: 'Item has been updated'})
 });
 
 document.querySelector('#save-selling-price').addEventListener('click', () => {

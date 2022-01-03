@@ -15,7 +15,7 @@ const addMetric = () => {
 };
 
 ipcRenderer.on("added-metric", (event) => {
-  alert("New metric has been added");
+  ipcRenderer.send("show-message", { heading: 'Metric added', message: 'New metric has been added' });
 });
 
 ipcRenderer.on("metric-list-fetched", (event, metrics) => {

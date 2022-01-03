@@ -1,5 +1,8 @@
 const electron = require("electron");
 const ipcRenderer = electron.ipcRenderer;
+const orderId = sessionStorage.getItem("orderId");
+
+var fetchedData;
 var items = [],
   costPrice;
 
@@ -8,10 +11,75 @@ const makePaidZero = () => {
   document.querySelector("#total-order-value").value = null;
 };
 
-const addItemField = () => {
+function convert(str) {
+  var date = new Date(str),
+    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+    day = ("0" + date.getDate()).slice(-2);
+  return [date.getFullYear(), mnth, day].join("-");
+}
+
+const populateOrderData = (supplierArray) => {
+  
+  const dropdown = document.querySelector("#supplier-dropdown");
+  supplierArray.forEach((supplier) => {
+    var optn = document.createElement("option");
+    optn.setAttribute("value", supplier.id);
+    optn.innerText = supplier.name;
+    dropdown.appendChild(optn);
+  });
+  dropdown.value = fetchedData.order.supplierId;
+  document.querySelector('#page-heading').innerText = dropdown.options[dropdown.selectedIndex].innerHTML;
+  if(fetchedData.order.settled === 0){
+    document.querySelector('#settle-order').innerText = 'Mark as settled';
+    document.querySelector('#settle-order').classList.add('blue-text');
+  }else{
+    document.querySelector('#settle-order').innerText = 'Mark as not settled';
+    document.querySelector('#settle-order').classList.add('red-text');
+  }
+  document.querySelector("#expected-date-input").value = convert(
+    fetchedData.order.orderExpectedDate
+  );
+  document.querySelector("#placed-date-input").value = convert(
+    fetchedData.order.orderPlacedDate
+  );
+  document.querySelector("#money-paid").value = fetchedData.order.paid;
+  document.querySelector("#total-order-value").value = fetchedData.order.total;
+};
+
+const populateItems = () => {
+  const orderItemJunc = fetchedData.orderItemArray;
+  
+  orderItemJunc.forEach((orderItem) =>
+    {
+      addItemField(
+        orderItem.itemId,
+        orderItem.quantity,
+        orderItem.price / orderItem.quantity,
+        orderItem.price
+      )
+    }
+  );
+};
+
+ipcRenderer.on("order-specific-data", (event, data) => {
+  fetchedData = data;
+  items = data.itemArray;
+  costPrice = data.costPriceArray;
+  const { supplierArray } = data;
+  populateOrderData(supplierArray);
+  populateItems();
+});
+
+const addItemField = (
+  fetchedItem,
+  fetchedQty,
+  fetchedPricePerUnit,
+  fetchedPrice
+) => {
   const tableBody = document.querySelector("#table-body");
   var drp = document.createElement("select");
   drp.required = true;
+  drp.setAttribute('value', '');
   drp.classList.add("browser-default");
   drp.classList.add("item-dropdown");
   const disabledDrp = document.createElement("option");
@@ -19,12 +87,15 @@ const addItemField = () => {
   disabledDrp.setAttribute("selected", true);
   disabledDrp.innerHTML = "Choose an item";
   drp.appendChild(disabledDrp);
+  
   items.forEach((item) => {
     var optn = document.createElement("option");
     optn.setAttribute("value", item.id);
     optn.innerText = `${item.name}`;
     drp.appendChild(optn);
   });
+  if(fetchedItem)
+  drp.value = fetchedItem;
   drp.onchange = (e) => {
     makePaidZero();
     const itemId = e.target.value;
@@ -71,6 +142,8 @@ const addItemField = () => {
   quantityInput.classList.add("quantity-input");
   quantityInput.setAttribute("type", "number");
   quantityInput.setAttribute("placeholder", "Enter quantity");
+  if(fetchedQty)
+  quantityInput.value = fetchedQty;
   quantityInput.oninput = (e) => {
     makePaidZero();
     const totalPriceEle =
@@ -90,6 +163,8 @@ const addItemField = () => {
   pricePerUnitInput.classList.add("price-per-unit-input");
   pricePerUnitInput.setAttribute("type", "number");
   pricePerUnitInput.setAttribute("placeholder", "price per unit");
+  if(fetchedPricePerUnit)
+  pricePerUnitInput.value = fetchedPricePerUnit;
   pricePerUnitInput.oninput = (e) => {
     makePaidZero();
     const totalPriceEle = e.target.parentElement.nextElementSibling.children[0];
@@ -108,7 +183,8 @@ const addItemField = () => {
   totalPrice.setAttribute("placeholder", "total price");
   totalPrice.classList.add("price-value");
   totalPrice.setAttribute("type", "number");
-
+  if(fetchedPrice)
+  totalPrice.value = fetchedPrice;
   drp.style.marginTop = 15;
   var row = document.createElement("tr");
   row.appendChild(drp);
@@ -128,11 +204,6 @@ const addItemField = () => {
   tableBody.appendChild(row);
 };
 
-document.querySelector("#add-another-item").addEventListener("click", (e) => {
-  e.preventDefault();
-  addItemField();
-});
-
 document.querySelector("#money-paid").oninput = () => {
   const totalPrices = document.querySelectorAll(".price-value");
   var total = 0;
@@ -143,19 +214,16 @@ document.querySelector("#money-paid").oninput = () => {
     total - document.querySelector("#money-paid").value;
 };
 
-const populateSuppliers = (supplierArray) => {
-  const dropdown = document.querySelector("#supplier-dropdown");
-  dropdown.id = "supplier-dropdown";
-  dropdown.innerHTML = "";
-  supplierArray.forEach((supplier) => {
-    var optn = document.createElement("option");
-    optn.setAttribute("value", supplier.id);
-    optn.innerText = supplier.name;
-    dropdown.appendChild(optn);
-  });
-};
+document.querySelector("#add-another-item").addEventListener("click", (e) => {
+  e.preventDefault();
+  addItemField();
+});
 
-document.querySelector("#place-the-order").addEventListener("click", (e) => {
+document.addEventListener("DOMContentLoaded", () => {
+  ipcRenderer.send("order-specific-window-loaded", orderId);
+});
+
+document.querySelector("#update-the-order").addEventListener("click", (e) => {
   e.preventDefault();
   const supplier = document.querySelector("#supplier-dropdown").value;
   if (!supplier)
@@ -190,18 +258,6 @@ document.querySelector("#place-the-order").addEventListener("click", (e) => {
   sendData();
 });
 
-ipcRenderer.on("supplier-item-fetched", (event, data) => {
-  items = data.itemArray;
-  costPrice = data.costPriceArray;
-  const { supplierArray } = data;
-  populateSuppliers(supplierArray);
-  addItemField();
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  ipcRenderer.send("order-window-loaded");
-});
-
 const sendData = () => {
   const total = document.querySelector("#total-order-value").value;
   const paid = document.querySelector("#money-paid").value;
@@ -221,11 +277,18 @@ const sendData = () => {
     const itemId = item.children[0].value;
     const quantity = item.children[1].children[0].value;
     const price = item.children[3].children[0].value;
-    allItems.push({ itemId, quantity, price });
+    allItems.push({ itemId, quantity, price, orderId });
   });
-  ipcRenderer.send('place-order', {allItems, order});
+  ipcRenderer.send('update-order', {allItems, order, orderId});
 };
 
-ipcRenderer.on('order-placed', () => {
-  document.querySelector('#view-order-toggle').click();
+document.querySelector('#settle-order').addEventListener('click', () => {
+  var newValue = 1;
+  if(fetchedData.order.settled === 1)
+    newValue = 0;
+  ipcRenderer.send('mark-as-settled', {orderId, newValue});
+})
+
+ipcRenderer.on('order-updated', (event) => {
+  location.reload();
 })

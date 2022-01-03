@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 ipcRenderer.on("supplier-added", (evt, result) => {
-  alert("Supplier has been added");
+  ipcRenderer.send("show-message", { heading: 'Supplier added', message: 'New supplier has been added' });
   ipcRenderer.send("supplier-window-loaded", { pageNumber, where, limit });
 });
 
