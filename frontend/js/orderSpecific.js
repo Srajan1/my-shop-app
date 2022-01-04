@@ -31,9 +31,11 @@ const populateOrderData = (supplierArray) => {
   document.querySelector('#page-heading').innerText = dropdown.options[dropdown.selectedIndex].innerHTML;
   if(fetchedData.order.settled === 0){
     document.querySelector('#settle-order').innerText = 'Mark as settled';
+    document.querySelector('#settle-inst').innerText = 'Marking an order settled will add all the item quantities to your stock'
     document.querySelector('#settle-order').classList.add('blue-text');
   }else{
     document.querySelector('#settle-order').innerText = 'Mark as not settled';
+    document.querySelector('#settle-inst').innerText = 'Marking an order un-settled will subtract all the item quantities from your stock'
     document.querySelector('#settle-order').classList.add('red-text');
   }
   document.querySelector("#expected-date-input").value = convert(

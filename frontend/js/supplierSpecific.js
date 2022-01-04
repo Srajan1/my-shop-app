@@ -2,7 +2,7 @@ const electron = require("electron");
 const ipcRenderer = electron.ipcRenderer;
 const supplierId = sessionStorage.getItem("supplierId");
 var fetchedData, totalPages;
-var limit = 2,
+var limit = 20,
   pageNumber = 1;
 document
   .querySelector("#update-supplier-form-toggle")
@@ -72,9 +72,7 @@ ipcRenderer.on("supplier-data-fetched", (event, data) => {
 });
 
 ipcRenderer.on("order-fetched-for-supplier", (event, { orderArray, count }) => {
-  console.log(orderArray);
   totalPages = count;
-  console.log(count);
   document.querySelector("#current-page").innerText = pageNumber;
   const tableBody = document.querySelector("#all-order-table");
   tableBody.innerHTML = "";

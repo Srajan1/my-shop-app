@@ -5,7 +5,7 @@ const { ipcMain, dialog } = require("electron");
 const Supplier = require("../models/supplierModel");
 const Item = require("../models/itemModel");
 const CostPrice = require("../models/costPriceModel");
-const sequelize = require('./db')
+const sequelize = require("./db");
 
 ipcMain.on("order-specific-window-loaded", async (event, data) => {
   try {
@@ -24,44 +24,118 @@ ipcMain.on("order-specific-window-loaded", async (event, data) => {
     );
     const itemArray = [];
     items.forEach((item) => itemArray.push(item.dataValues));
-    const orderData = await Order.findOne({where: {id: orderId}});
+    const orderData = await Order.findOne({ where: { id: orderId } });
     const order = orderData.dataValues;
-    const orderItemJunctionData = await OrderItemJunction.findAll({where: {orderId}});
+    const orderItemJunctionData = await OrderItemJunction.findAll({
+      where: { orderId },
+    });
     const orderItemArray = [];
-    orderItemJunctionData.forEach(orderItem => orderItemArray.push(orderItem.dataValues));
+    orderItemJunctionData.forEach((orderItem) =>
+      orderItemArray.push(orderItem.dataValues)
+    );
 
     event.sender.send("order-specific-data", {
       supplierArray,
       itemArray,
       costPriceArray,
       order,
-      orderItemArray
+      orderItemArray,
     });
   } catch (err) {
     dialog.showErrorBox("An error message", err.message);
   }
 });
 
-ipcMain.on('mark-as-settled', async(event, {orderId, newValue}) => {
-  try{
-    await Order.update({settled: newValue }, {where: {id: orderId}});
-    event.sender.send('order-updated');
-  }catch(err){
-    dialog.showErrorBox("An error message", err.message);
-  }
-})
-
-ipcMain.on('update-order', async(event, {allItems, order, orderId}) => {
-  try{
+ipcMain.on("mark-as-settled", async (event, { orderId, newValue }) => {
+  try {
     const t = await sequelize.transaction();
-    await Order.update(order, {where: {id: orderId}, transaction: t});
-    await OrderItemJunction.destroy({where: {orderId}, transaction: t});
-    await OrderItemJunction.bulkCreate(allItems, {transaction: t});
-    t.commit();
-    event.sender.send('order-updated');
-  }catch(err){
-    console.log(err);
+    if (newValue === 1) {
+      const items = await OrderItemJunction.findAll({
+        where: { orderId },
+        attributes: ["itemId", "quantity"],
+      });
+      const itemsArray = [];
+      items.forEach((item) => itemsArray.push(item.dataValues));
+      itemsArray.forEach(async (item) => {
+        const { itemId, quantity } = item;
+        if (quantity == null) quantity = 0;
+        const itemDetails = await Item.findOne({
+          where: { id: itemId },
+          attributes: ["available"],
+        });
+        const data = { available: itemDetails.available + quantity };
+        Item.update(data, { where: { id: itemId }, transaction: t })
+          .then(() => {
+            Order.update(
+              { settled: newValue },
+              { where: { id: orderId }, transaction: t }
+            )
+              .then(() => {
+                t.commit();
+              })
+              .catch(async (err) => {
+                await t.rollback();
+                dialog.showErrorBox("An error message", err.message);
+              });
+          })
+          .catch(async (err) => {
+            await t.rollback();
+            dialog.showErrorBox("An error message", err.message);
+          });
+      });
+    } else {
+      const items = await OrderItemJunction.findAll({
+        where: { orderId },
+        attributes: ["itemId", "quantity"],
+      });
+      const itemsArray = [];
+      items.forEach((item) => itemsArray.push(item.dataValues));
+      itemsArray.forEach(async (item) => {
+        const { itemId, quantity } = item;
+        if (quantity == null) quantity = 0;
+        const itemDetails = await Item.findOne({
+          where: { id: itemId },
+          attributes: ["available"],
+        });
+        if (itemDetails.available < quantity) itemDetails.available = quantity;
+        const data = { available: itemDetails.available - quantity };
+        Item.update(data, { where: { id: itemId }, transaction: t })
+          .then(() => {
+            Order.update(
+              { settled: newValue },
+              { where: { id: orderId }, transaction: t }
+            )
+              .then(() => {
+                t.commit();
+              })
+              .catch(async (err) => {
+                await t.rollback();
+                dialog.showErrorBox("An error message", err.message);
+              });
+          })
+          .catch(async (err) => {
+            await t.rollback();
+            dialog.showErrorBox("An error message", err.message);
+          });
+      });
+    }
+    event.sender.send("order-updated");
+  } catch (err) {
     await t.rollback();
     dialog.showErrorBox("An error message", err.message);
   }
-})
+});
+
+ipcMain.on("update-order", async (event, { allItems, order, orderId }) => {
+  try {
+    const t = await sequelize.transaction();
+    await Order.update(order, { where: { id: orderId }, transaction: t });
+    await OrderItemJunction.destroy({ where: { orderId }, transaction: t });
+    await OrderItemJunction.bulkCreate(allItems, { transaction: t });
+    t.commit();
+    event.sender.send("order-updated");
+  } catch (err) {
+    await t.rollback();
+    dialog.showErrorBox("An error message", err.message);
+  }
+});
