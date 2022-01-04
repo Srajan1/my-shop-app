@@ -6,6 +6,7 @@ const metric = require('./database/metricController')
 const item = require('./database/itemController')
 const itemSpecific = require('./database/itemSpecificController');
 const orderSpecific = require('./database/orderSpecificController');
+const supplierSpecific = require('./database/supplierSpecificController');
 require('./utilities')
 sequelize
   .sync()

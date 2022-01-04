@@ -7,6 +7,16 @@ let pageNumber = 1,
   limit = 20,
   where = {};
 
+  const manageFunction = () => {
+    const manageButton = document.querySelectorAll('.manage-button')
+    var i;
+    for (i = 0; i < manageButton.length; i++) {
+      manageButton[i].onclick = function () {
+        sessionStorage.setItem("supplierId", this.id);
+      };
+    }
+  };
+
 const saveSupplier = async function (e) {
   const supplierName = document.querySelector("#supplier-name").value;
   const supplierPhone = document.querySelector("#supplier-phone-number").value;
@@ -16,7 +26,7 @@ const saveSupplier = async function (e) {
   ).value;
   const supplier = {};
   if (supplierName !== "") supplier.name = supplierName;
-  if (supplierPhone !== "") supplier.phone = supplierPhone;
+  if (supplierPhone !== "") supplier.phoneNumber = supplierPhone;
   if (supplierAddress !== "") supplier.address = supplierAddress;
   if (supplierDescription !== "") supplier.description = supplierDescription;
 
@@ -100,11 +110,10 @@ ipcRenderer.on("fetched-suppliers", (event, suppliersInfo) => {
     row.innerHTML = `<tr><td>${supplier.name}</td>
     <td>${supplier.phoneNumber}</td>
     <td>${supplier.address}</td>
-    <td><button class="transparent btn"  id="${supplier.id}_view"><abbr title="View">🔍</abbr></button></td>
-    <td><button class="transparent btn"  id="${supplier.id}_edit"><abbr title="Edit">📝</abbr></button></td>
-    <td><button class="transparent btn"  id="${supplier.id}_delete"><abbr title="Delete">❌</abbr></button></td></tr>`;
+    <td><a href="supplierSpecific.html" class="transparent btn manage-button"  id="${supplier.id}">📝</a></td></tr>`;
     tableBody.appendChild(row);
   });
+  manageFunction();
   totalPages = Math.floor(count / limit);
   if (count % limit != 0) ++totalPages;
   const currentPage = document.querySelector("#current-page");

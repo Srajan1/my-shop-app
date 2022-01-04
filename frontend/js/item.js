@@ -49,7 +49,8 @@ ipcRenderer.on("item-metric-list-fetched", (event, data) => {
 });
 
 ipcRenderer.on("item-added", (event) => {
-  ipcRenderer.send('show-message', {heading: 'Item added', message: 'New item has been added'})
+  ipcRenderer.send('show-message', {heading: 'Item added', message: 'New item has been added'});
+  ipcRenderer.send("item-window-loaded", { pageNumber, perPage, where });
 });
 
 const prevButton = document

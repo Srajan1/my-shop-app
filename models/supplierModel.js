@@ -19,7 +19,7 @@ Supplier.init({
     address: {
       type: DataTypes.STRING
     },
-    desciption: {
+    description: {
       type: DataTypes.STRING(10000),
     }
   }, {

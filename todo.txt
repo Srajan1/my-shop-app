@@ -1,1 +1,2 @@
 db to excel download
+marking an order settled, adds up the value in stock

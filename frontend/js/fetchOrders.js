@@ -73,8 +73,8 @@ const hideOrders = () => {
 
 document.querySelector("#view-order-toggle").addEventListener("click", () => {
   const formStyle = document.querySelector("form").style.display;
-  if (formStyle == "none") hideOrders();
-  else showOrders();
+  if (formStyle == "none") {hideOrders(); document.querySelector('#view-order-toggle').innerText = 'View all orders';}
+  else {showOrders(); document.querySelector('#view-order-toggle').innerText = 'Place an order';}
 });
 
 document.querySelector("#prev-button").addEventListener("click", () => {
