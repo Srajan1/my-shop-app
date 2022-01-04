@@ -2,8 +2,8 @@ const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 const Metric = require("./metricModel");
 
-const Item = sequelize.define(
-  "Item",
+const Customer = sequelize.define(
+  "Customer",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -14,21 +14,22 @@ const Item = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    available: {
-      type: DataTypes.FLOAT,
-      defaultValue: 0,
+    phoneNumber: {
+      type: DataTypes.STRING,
     },
-    incoming: {
-      type: DataTypes.FLOAT,
-      defaultValue: 0,
+    address: {
+      type: DataTypes.STRING,
+    },
+    description: {
+      type: DataTypes.STRING(10000),
     },
   },
   {
     sequelize,
-    tableName: "items",
+    tableName: "customers",
     freezeTableName: true,
   }
 );
 
-Item.belongsTo(Metric, { foreignKey: "metricId", targetKey: "id" });
-module.exports = Item;
+// Customer.belongsTo(Metric, { foreignKey: "metricId", targetKey: "id" });
+module.exports = Customer;

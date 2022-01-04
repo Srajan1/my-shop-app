@@ -1,0 +1,90 @@
+<div id="header"></div>
+<div id="content" class="row">
+  <div id="navbar"></div>
+
+  <div class="col l10">
+    <div class="card">
+      <h3 style="padding: 15px 20px">Customers</h3>
+      <div class="card-action">
+        <a href="#" class="green-text" id="add-customer-form-toggle"
+          >Add new customer</a
+        >
+        <a href="#"  id="filter-form-toggle">Apply filters to search</a>
+      </div>
+    </div>
+    <form id="adding-form" method="GET" style="display: none">
+      <input
+        type="text"
+        id="customer-name"
+        placeholder="Enter customer name(mandatory)"
+        required
+      />
+      <input
+        type="number"
+        id="customer-phone-number"
+        placeholder="Enter customer phone-number"
+      />
+      <input
+        type="text"
+        id="customer-address"
+        placeholder="Enter customer address"
+      />
+      <input
+        type="text"
+        id="customer-description"
+        placeholder="Enter customer description"
+      />
+      <button type="submit" id="save-customer-details" class="btn">Save</button>
+    </form>
+    <form style="padding: 15px 20px; display: none" id="filter-form" method="GET" class="row card">
+      <h6 class="center">
+        Apply search filters
+        <span class="grey-text">No filter is mandatory</span>
+      </h6>
+      <div class="col l4 left">
+        <input id ="filter-name" type="text" placeholder="name" />
+      </div>
+
+      <div class="col l4 center">
+        <input id ="filter-phone" type="number" placeholder="phone number"/>
+      </div>
+
+      <div class="col l4 right">
+        <input id ="filter-address" type="text" placeholder="address" />
+      </div>
+      <div class="col center">
+        <button type="submit" id="filter-customer-details" class="btn">Filter</button>
+      </div>
+    </form>
+    <table class="striped">
+      <thead>
+        <th>Name</th>
+        <th>Phone number</th>
+        <th>Address</th>
+        <th>Manage</th>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+    <div class="divider"></div>
+    <br />
+    <br />
+    <br />
+    <ul class="pagination center">
+      <li>
+        <a id="prev-button" href="#!"><i class="material-icons"><</i></a>
+      </li>
+      <li class="active"><a href="#!" id="current-page">page number</a></li>
+      <li >
+        <a id="next-button" href="#!"><i class="material-icons">></i></a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div id="footer"></div>
+
+<script>
+  require("./partials/header.js");
+  require("./partials/navbar.js");
+  require("./partials/footer.js");
+  require("./js/customer.js");
+</script>
