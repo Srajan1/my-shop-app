@@ -157,36 +157,46 @@ const populateSuppliers = (supplierArray) => {
 
 document.querySelector("#place-the-order").addEventListener("click", (e) => {
   e.preventDefault();
+  var error = 0;
   const supplier = document.querySelector("#supplier-dropdown").value;
-  if (!supplier)
+  if (!supplier){
     ipcRenderer.send("error-occured", {
       heading: "Supplier not found",
       message: "Please select a supplier",
     });
+    error = 1;
+  }
   const items = document.querySelectorAll(".item-dropdown");
   items.forEach((item) => {
-    if (!item.value || item.value === "Choose an item")
+    if (!item.value || item.value === "Choose an item"){
       ipcRenderer.send("error-occured", {
         heading: "Item not found",
         message: "Make sure items are selected",
       });
+      error = 1;
+    }
   });
   const quantities = document.querySelectorAll(".quantity-input");
   quantities.forEach((quantity) => {
-    if (!quantity.value)
+    if (!quantity.value){
       ipcRenderer.send("error-occured", {
         heading: "Quantity not found",
         message: "Please mention all quantities",
       });
+      error = 1;
+    }
   });
   const pricePerUnitInput = document.querySelectorAll(".price-per-unit-input");
   pricePerUnitInput.forEach((price) => {
-    if (!price.value)
+    if (!price.value){
       ipcRenderer.send("error-occured", {
         heading: "Price per unit not found",
         message: "Please mention all price per unit",
       });
+      error = 1;
+    }
   });
+  if(error === 0)
   sendData();
 });
 

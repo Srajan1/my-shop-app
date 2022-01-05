@@ -5,25 +5,25 @@
 
   <div class="col l10">
     <div class="card">
-      <h3 style="padding: 15px 20px">Orders</h3>
+      <h3 style="padding: 15px 20px">Sales</h3>
       <div class="card-action">
-        <a href="#" class="green-text" id="view-order-toggle"
-          >View all orders</a
+        <a href="#" class="green-text" id="view-sale-toggle"
+          >View all sales</a
         >
       </div>
     </div>
 
-    <form id="add-order">
+    <form id="add-sale">
       <div class="col l4">
-        <label for="supplier-dropdown">Select supplier</label>
-        <select class="browser-default" id="supplier-dropdown"></select>
+        <label for="customer-dropdown">Select customer</label>
+        <select class="browser-default" id="customer-dropdown"></select>
       </div>
       <div class="col l4">
-        <label for="date">Expected arrival date</label>
+        <label for="date">Expected sale completion date</label>
         <input type="date" id="expected-date-input" id="date" />
       </div>
       <div class="col l4">
-        <label for="date">Order placed on</label>
+        <label for="date">Sale order placed on</label>
         <input type="date" id="placed-date-input" id="date" />
       </div>
       <table class="striped">
@@ -49,30 +49,30 @@
             type="number"
             id="money-paid"
             required
-            placeholder="How much have you already paid?"
+            placeholder="How much has the customer already paid?"
             value="0"
           />
-          <label for="total-order-value">Total remaining</label>
-          <input type="number" id="total-order-value" readonly />
+          <label for="total-sale-value">Total remaining</label>
+          <input type="number" id="total-sale-value" readonly />
           <!-- </div> -->
-          <button class="btn" id="place-the-order">Place order</button>
+          <button class="btn" id="place-the-sale">Add a sale</button>
         </div>
       </div>
     </form>
-    <div id="order-table" style="visibility: hidden">
-      <button class="btn" id="settled-order-view">Show only pending orders</button>
+    <div id="sale-table" style="visibility: hidden">
+      <button class="btn" id="settled-sale-view">Show only pending sales</button>
       <table>
         <thead>
-          <th>Supplier</th>
+          <th>Customer</th>
           <th>Remaining</th>
           <th>Paid</th>
           <th>Total</th>
           <th>Settled</th>
-          <th>Order placed</th>
-          <th>Order Expected on</th>
+          <th>Sale placed</th>
+          <th>Sale Expected on</th>
           <th>Manage</th>
         </thead>
-        <tbody id="all-order-table"></tbody>
+        <tbody id="all-sale-table"></tbody>
       </table>
       <ul class="pagination center">
         <li>
@@ -93,6 +93,6 @@
   require("./partials/header.js");
   require("./partials/navbar.js");
   require("./partials/footer.js");
-  require("./js/order.js");
-  require("./js/fetchOrders.js");
+  require("./js/sale.js");
+  require("./js/fetchSales.js");
 </script>

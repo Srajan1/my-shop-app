@@ -8,7 +8,8 @@ require('./database/itemSpecificController');
 require('./database/orderSpecificController');
 require('./database/supplierSpecificController');
 require('./database/customerController');
-
+require('./database/saleController');
+require('./database/saleSpecificController');
 require('./utilities')
 sequelize
   .sync()

@@ -1,14 +1,14 @@
 const electron = require("electron");
 const ipcRenderer = electron.ipcRenderer;
-const orderId = sessionStorage.getItem("orderId");
+const saleId = sessionStorage.getItem("saleId");
 
 var fetchedData;
 var items = [],
-  costPrice;
+  sellingPrice;
 
 const makePaidZero = () => {
   document.querySelector("#money-paid").value = 0;
-  document.querySelector("#total-order-value").value = null;
+  document.querySelector("#total-sale-value").value = null;
 };
 
 function convert(str) {
@@ -18,60 +18,60 @@ function convert(str) {
   return [date.getFullYear(), mnth, day].join("-");
 }
 
-const populateOrderData = (supplierArray) => {
+const populateSaleData = (customerArray) => {
   
-  const dropdown = document.querySelector("#supplier-dropdown");
-  supplierArray.forEach((supplier) => {
+  const dropdown = document.querySelector("#customer-dropdown");
+  customerArray.forEach((customer) => {
     var optn = document.createElement("option");
-    optn.setAttribute("value", supplier.id);
-    optn.innerText = supplier.name;
+    optn.setAttribute("value", customer.id);
+    optn.innerText = customer.name;
     dropdown.appendChild(optn);
   });
-  dropdown.value = fetchedData.order.supplierId;
+  dropdown.value = fetchedData.sale.customerId;
   document.querySelector('#page-heading').innerText = dropdown.options[dropdown.selectedIndex].innerHTML;
-  if(fetchedData.order.settled === 0){
-    document.querySelector('#settle-order').innerText = 'Mark as settled';
-    document.querySelector('#settle-inst').innerText = 'Marking an order settled will add all the item quantities to your stock'
-    document.querySelector('#settle-order').classList.add('blue-text');
+  if(fetchedData.sale.settled === 0){
+    document.querySelector('#settle-sale').innerText = 'Mark as settled';
+    document.querySelector('#settle-inst').innerText = 'Marking a sale settled will subtract all the item quantities from your stock'
+    document.querySelector('#settle-sale').classList.add('blue-text');
   }else{
 
-    document.querySelector('#settle-order').innerText = 'Mark as not settled';
-    document.querySelector('#settle-inst').innerText = 'Marking an order un-settled will subtract all the item quantities from your stock'
-    document.querySelector('#settle-order').classList.add('red-text');
+    document.querySelector('#settle-sale').innerText = 'Mark as not settled';
+    document.querySelector('#settle-inst').innerText = 'Marking a sale un-settled will add all the item quantities to your stock'
+    document.querySelector('#settle-sale').classList.add('red-text');
   }
   document.querySelector("#expected-date-input").value = convert(
-    fetchedData.order.orderExpectedDate
+    fetchedData.sale.saleExpectedDate
   );
   document.querySelector("#placed-date-input").value = convert(
-    fetchedData.order.orderPlacedDate
+    fetchedData.sale.salePlacedDate
   );
-  document.querySelector("#money-paid").value = fetchedData.order.paid;
-  document.querySelector("#total-order-value").value = fetchedData.order.total;
+  document.querySelector("#money-paid").value = fetchedData.sale.paid;
+  document.querySelector("#total-sale-value").value = fetchedData.sale.total;
 };
 
 const populateItems = () => {
-  const orderItemJunc = fetchedData.orderItemArray;
+  const saleItemJunc = fetchedData.saleItemArray;
   
-  orderItemJunc.forEach((orderItem) =>
+  saleItemJunc.forEach((saleItem) =>
     {
       addItemField(
-        orderItem.itemId,
-        orderItem.quantity,
-        orderItem.price / orderItem.quantity,
-        orderItem.price
+        saleItem.itemId,
+        saleItem.quantity,
+        saleItem.price / saleItem.quantity,
+        saleItem.price
       )
     }
   );
 };
 
-ipcRenderer.on("order-specific-data", (event, data) => {
+ipcRenderer.on("sale-specific-data", (event, data) => {
   fetchedData = data;
-  if(fetchedData.order.settled === 1)
-  document.querySelector('#update-the-order').disabled = true;
+  if(fetchedData.sale.settled === 1)
+  document.querySelector('#update-the-sale').disabled = true;
   items = data.itemArray;
-  costPrice = data.costPriceArray;
-  const { supplierArray } = data;
-  populateOrderData(supplierArray);
+  sellingPrice = data.sellingPriceArray;
+  const { customerArray } = data;
+  populateSaleData(customerArray);
   populateItems();
 });
 
@@ -111,7 +111,7 @@ const addItemField = (
     e.target.nextElementSibling.children[0].value = null;
     var price;
     var isPresent = 0;
-    costPrice.forEach((item) => {
+    sellingPrice.forEach((item) => {
       if (item.itemId == itemId) {
         price = item.price;
         isPresent = 1;
@@ -140,7 +140,7 @@ const addItemField = (
     totalPrices.forEach((price) => {
       total += parseInt(price.value);
     });
-    document.querySelector("#total-order-value").value = total;
+    document.querySelector("#total-sale-value").value = total;
   };
   const quantityInput = document.createElement("input");
   quantityInput.required = true;
@@ -161,7 +161,7 @@ const addItemField = (
     totalPrices.forEach((price) => {
       total += parseInt(price.value);
     });
-    document.querySelector("#total-order-value").value = total;
+    document.querySelector("#total-sale-value").value = total;
   };
   const pricePerUnitInput = document.createElement("input");
   pricePerUnitInput.required = true;
@@ -181,7 +181,7 @@ const addItemField = (
     totalPrices.forEach((price) => {
       total += parseInt(price.value);
     });
-    document.querySelector("#total-order-value").value = total;
+    document.querySelector("#total-sale-value").value = total;
   };
   const totalPrice = document.createElement("input");
   totalPrice.readOnly = true;
@@ -215,7 +215,7 @@ document.querySelector("#money-paid").oninput = () => {
   totalPrices.forEach((price) => {
     total += parseInt(price.value);
   });
-  document.querySelector("#total-order-value").value =
+  document.querySelector("#total-sale-value").value =
     total - document.querySelector("#money-paid").value;
 };
 
@@ -225,16 +225,16 @@ document.querySelector("#add-another-item").addEventListener("click", (e) => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  ipcRenderer.send("order-specific-window-loaded", orderId);
+  ipcRenderer.send("sale-specific-window-loaded", saleId);
 });
 
-document.querySelector("#update-the-order").addEventListener("click", (e) => {
+document.querySelector("#update-the-sale").addEventListener("click", (e) => {
   e.preventDefault();
-  const supplier = document.querySelector("#supplier-dropdown").value;
-  if (!supplier)
+  const customer = document.querySelector("#customer-dropdown").value;
+  if (!customer)
     ipcRenderer.send("error-occured", {
-      heading: "Supplier not found",
-      message: "Please select a supplier",
+      heading: "Customer not found",
+      message: "Please select a customer",
     });
   const items = document.querySelectorAll(".item-dropdown");
   items.forEach((item) => {
@@ -264,17 +264,17 @@ document.querySelector("#update-the-order").addEventListener("click", (e) => {
 });
 
 const sendData = () => {
-  const total = document.querySelector("#total-order-value").value;
+  const total = document.querySelector("#total-sale-value").value;
   const paid = document.querySelector("#money-paid").value;
-  const orderExpectedDate = document.querySelector("#expected-date-input").value;
-  const orderPlacedDate = document.querySelector("#placed-date-input").value;
-  const supplierId =  document.querySelector('#supplier-dropdown').value;
-  const order = {
+  const saleExpectedDate = document.querySelector("#expected-date-input").value;
+  const salePlacedDate = document.querySelector("#placed-date-input").value;
+  const customerId =  document.querySelector('#customer-dropdown').value;
+  const sale = {
     total, 
     paid, 
-    orderExpectedDate, 
-    orderPlacedDate,
-    supplierId
+    saleExpectedDate, 
+    salePlacedDate,
+    customerId
   };
   const itemList = document.querySelectorAll(".item-list");
   const allItems = [];
@@ -282,18 +282,18 @@ const sendData = () => {
     const itemId = item.children[0].value;
     const quantity = item.children[1].children[0].value;
     const price = item.children[3].children[0].value;
-    allItems.push({ itemId, quantity, price, orderId });
+    allItems.push({ itemId, quantity, price, saleId });
   });
-  ipcRenderer.send('update-order', {allItems, order, orderId});
+  ipcRenderer.send('update-sale', {allItems, sale, saleId});
 };
 
-document.querySelector('#settle-order').addEventListener('click', () => {
+document.querySelector('#settle-sale').addEventListener('click', () => {
   var newValue = 1;
-  if(fetchedData.order.settled === 1)
+  if(fetchedData.sale.settled === 1)
     newValue = 0;
-  ipcRenderer.send('mark-as-settled', {orderId, newValue});
+  ipcRenderer.send('mark-as-settled', {saleId, newValue});
 })
 
-ipcRenderer.on('order-updated', (event) => {
+ipcRenderer.on('sale-updated', (event) => {
   location.reload();
 })

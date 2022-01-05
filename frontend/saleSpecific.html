@@ -1,0 +1,69 @@
+<div id="header"></div>
+
+<div id="content" class="row">
+  <div id="navbar"></div>
+
+  <div class="col l10">
+    <div class="card">
+      <h3 style="padding: 15px 20px" id="page-heading"></h3>
+      <div class="card-action">
+        <a href="#" id="settle-sale"
+          ></a
+        >
+        <span id="settle-inst"></span>
+      </div>
+    </div>
+    <form id="update-sale">
+      <div class="col l4">
+        <label for="customer-dropdown">Select customer</label>
+        <select class="browser-default" id="customer-dropdown"></select>
+      </div>
+      <div class="col l4">
+        <label for="date">Expected completion date</label>
+        <input type="date" id="expected-date-input" id="date" />
+      </div>
+      <div class="col l4">
+        <label for="date">Sale made on</label>
+        <input type="date" id="placed-date-input" id="date" />
+      </div>
+      <table class="striped">
+        <thead>
+          <th>Item name</th>
+          <th>Quantity</th>
+          <th>Price per unit</th>
+          <th>Total Price</th>
+          <th>Remove</th>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+      <div class="row">
+        <div>
+          <button class="btn" id="add-another-item">Add another item</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col l3 right">
+          <!-- <div style="display: none;"> -->
+          <label for="money-paid">Already paid</label>
+          <input
+            type="number"
+            id="money-paid"
+            required
+            placeholder="How much has the customer already paid?"
+          />
+          <label for="total-sale-value">Total remaining</label>
+          <input type="number" id="total-sale-value" readonly />
+          <!-- </div> -->
+          <button class="btn" id="update-the-sale">Update sale</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div id="footer"></div>
+<script>
+  require("./partials/header.js");
+  require("./partials/navbar.js");
+  require("./partials/footer.js");
+  require("./js/saleSpecific.js");
+</script>
