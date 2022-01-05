@@ -7,6 +7,7 @@ require('./database/itemController')
 require('./database/itemSpecificController');
 require('./database/orderSpecificController');
 require('./database/supplierSpecificController');
+require('./database/customerSpecificController');
 require('./database/customerController');
 require('./database/saleController');
 require('./database/saleSpecificController');

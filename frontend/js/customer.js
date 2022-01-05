@@ -110,7 +110,7 @@ ipcRenderer.on("fetched-customers", (event, customersInfo) => {
     row.innerHTML = `<tr><td>${customer.name}</td>
     <td>${customer.phoneNumber}</td>
     <td>${customer.address}</td>
-    <td><a href="#" class="transparent btn manage-button"  id="${customer.id}">📝</a></td></tr>`;
+    <td><a href="customerSpecific.html" class="transparent btn manage-button"  id="${customer.id}">📝</a></td></tr>`;
     tableBody.appendChild(row);
   });
   manageFunction();

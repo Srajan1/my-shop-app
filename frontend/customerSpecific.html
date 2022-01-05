@@ -1,0 +1,67 @@
+<div id="header"></div>
+<div id="content" class="row">
+  <div id="navbar"></div>
+
+  <div class="col l10">
+    <div class="card">
+      <h3 style="padding: 15px 20px" id="page-heading">Customers</h3>
+      <div class="card-action">
+        <a href="#" class="blue-text" id="update-customer-form-toggle"
+          >Update customer details</a
+        >
+      </div>
+    </div>
+    <form id="updation-form" style="display: none;">
+      <input
+        type="text"
+        id="customer-name"
+        placeholder="Enter customer name(mandatory)"
+      />
+      <input
+        type="number"
+        id="customer-phone-number"
+        placeholder="Enter customer phone-number"
+      />
+      <input
+        type="text"
+        id="customer-address"
+        placeholder="Enter customer address"
+      />
+      <input
+        type="text"
+        id="customer-description"
+        placeholder="Enter customer description"
+      />
+      <button id="update-details" class="btn">Update Data</button>
+    </form>
+    <table>
+      <thead>
+        <th>Remaining</th>
+        <th>Paid</th>
+        <th>Total</th>
+        <th>Settled</th>
+        <th>Sale placed</th>
+        <th>Sale Expected on</th>
+        <th>Manage</th>
+      </thead>
+      <tbody id="all-sale-table"></tbody>
+    </table>
+    <ul class="pagination center">
+      <li>
+        <a id="prev-button" href="#!"><i class="material-icons"><</i></a>
+      </li>
+      <li class="active"><a href="#!" id="current-page">page number</a></li>
+      <li >
+        <a id="next-button" href="#!"><i class="material-icons">></i></a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div id="footer"></div>
+
+<script>
+  require("./partials/header.js");
+  require("./partials/navbar.js");
+  require("./partials/footer.js");
+  require("./js/customerSpecific.js");
+</script>
