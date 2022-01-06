@@ -1,5 +1,6 @@
 const electron = require("electron");
 const ipcRenderer = electron.ipcRenderer;
+const convertJsonToExcel = require('../partials/generateExcel');
 
 const addSuppierFo = function () {};
 let pageNumber = 1,
@@ -16,6 +17,14 @@ let pageNumber = 1,
       };
     }
   };
+
+document.querySelector('#download-excel-data').addEventListener('click', () => {
+  ipcRenderer.send('fetch-all-suppliers');
+})
+
+ipcRenderer.on('all-suppliers-fetched', (event, data) => {
+  convertJsonToExcel(data);
+})
 
 const saveSupplier = async function (e) {
   const supplierName = document.querySelector("#supplier-name").value;

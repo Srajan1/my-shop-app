@@ -35,6 +35,17 @@ ipcMain.on("supplier-window-loaded", async function (event, query) {
   }
 });
 
+ipcMain.on('fetch-all-suppliers', async(event) => {
+  try{
+    const supplierData = await Supplier.findAll();
+    const suppliers = [];
+    supplierData.forEach(supplier => suppliers.push(supplier.dataValues));
+    event.sender.send('all-suppliers-fetched', suppliers);
+  }catch(err){
+    dialog.showErrorBox("An error message", err.message);
+  }
+})
+
 ipcMain.on("add-supplier", async function (event, supplier) {
   try {
     const newSupplier = await Supplier.create(supplier);

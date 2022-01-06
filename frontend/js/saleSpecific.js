@@ -1,10 +1,15 @@
 const electron = require("electron");
 const ipcRenderer = electron.ipcRenderer;
 const saleId = sessionStorage.getItem("saleId");
+const generateInvoice = require("../partials/invoiceGenerator");
 
 var fetchedData;
 var items = [],
   sellingPrice;
+var products = [];
+var customerData = {};
+var GSTIN = "09AOXPG4283N1ZZ",
+  myCompanyName = "Jaishree Traders";
 
 const makePaidZero = () => {
   document.querySelector("#money-paid").value = 0;
@@ -18,8 +23,39 @@ function convert(str) {
   return [date.getFullYear(), mnth, day].join("-");
 }
 
+document.querySelector("#generate-invoice").addEventListener("click", () => {
+  const data = {};
+  const date = new Date();
+
+  // data.images = {
+  //   logo: "./companyLogo.png",
+  // };
+  data.sender = {
+    company: myCompanyName,
+    address: "532 Alam Nagar",
+    zip: "261001",
+    city: "Sitapur",
+    country: "India",
+    custom1: `GSTIN: ${GSTIN}`,
+  };
+  data.client = {
+    company: `${customerData.name}`,
+    address: `${customerData.address}`,
+  };
+  data.information = {
+    number: fetchedData.sale.id.toString()+ '_' + date.toLocaleString().split(',')[0].toString(),
+    date: `${fetchedData.sale.salePlacedDate.toLocaleString().split(',')[0]}`,
+    "due-date": fetchedData.sale.saleExpectedDate.toLocaleString().split(',')[0],
+  };
+  data.products = products;
+  data.settings = {
+    "currency": "INR"
+  };
+  var name = fetchedData.sale.id.toString()+ '_' + date.toLocaleString().toString() + '.pdf';
+  generateInvoice(data, name);
+});
+
 const populateSaleData = (customerArray) => {
-  
   const dropdown = document.querySelector("#customer-dropdown");
   customerArray.forEach((customer) => {
     var optn = document.createElement("option");
@@ -28,16 +64,18 @@ const populateSaleData = (customerArray) => {
     dropdown.appendChild(optn);
   });
   dropdown.value = fetchedData.sale.customerId;
-  document.querySelector('#page-heading').innerText = dropdown.options[dropdown.selectedIndex].innerHTML;
-  if(fetchedData.sale.settled === 0){
-    document.querySelector('#settle-sale').innerText = 'Mark as settled';
-    document.querySelector('#settle-inst').innerText = 'Marking a sale settled will subtract all the item quantities from your stock'
-    document.querySelector('#settle-sale').classList.add('blue-text');
-  }else{
-
-    document.querySelector('#settle-sale').innerText = 'Mark as not settled';
-    document.querySelector('#settle-inst').innerText = 'Marking a sale un-settled will add all the item quantities to your stock'
-    document.querySelector('#settle-sale').classList.add('red-text');
+  document.querySelector("#page-heading").innerText =
+    dropdown.options[dropdown.selectedIndex].innerHTML;
+  if (fetchedData.sale.settled === 0) {
+    document.querySelector("#settle-sale").innerText = "Mark as settled";
+    document.querySelector("#settle-inst").innerText =
+      "Marking a sale settled will subtract all the item quantities from your stock";
+    document.querySelector("#settle-sale").classList.add("blue-text");
+  } else {
+    document.querySelector("#settle-sale").innerText = "Mark as not settled";
+    document.querySelector("#settle-inst").innerText =
+      "Marking a sale un-settled will add all the item quantities to your stock";
+    document.querySelector("#settle-sale").classList.add("red-text");
   }
   document.querySelector("#expected-date-input").value = convert(
     fetchedData.sale.saleExpectedDate
@@ -51,23 +89,36 @@ const populateSaleData = (customerArray) => {
 
 const populateItems = () => {
   const saleItemJunc = fetchedData.saleItemArray;
-  
-  saleItemJunc.forEach((saleItem) =>
-    {
-      addItemField(
-        saleItem.itemId,
-        saleItem.quantity,
-        saleItem.price / saleItem.quantity,
-        saleItem.price
-      )
-    }
-  );
+
+  saleItemJunc.forEach((saleItem) => {
+    addItemField(
+      saleItem.itemId,
+      saleItem.quantity,
+      saleItem.price / saleItem.quantity,
+      saleItem.price
+    );
+  });
 };
 
 ipcRenderer.on("sale-specific-data", (event, data) => {
   fetchedData = data;
-  if(fetchedData.sale.settled === 1)
-  document.querySelector('#update-the-sale').disabled = true;
+
+  if (fetchedData.sale.settled === 1) {
+    document.querySelector("#update-the-sale").disabled = true;
+    document.querySelectorAll("input").readOnly = true;
+    document.querySelector("#generate-invoice").classList.remove("grey-text");
+    document.querySelector("#generate-invoice").setAttribute("href", "#");
+    document.querySelector("#generate-invoice").classList.add("amber-text");
+  }
+  ipcRenderer.send("fetch-customer-data-for-sale", fetchedData.sale.customerId);
+  ipcRenderer.on(
+    "customer-data-fetched-for-sale",
+    (event, data) => (customerData = data)
+  );
+  ipcRenderer.send("fetch-sold-item-data", fetchedData.sale.id);
+  ipcRenderer.on("sold-items-fetched", (event, data) => {
+    products = data;
+  });
   items = data.itemArray;
   sellingPrice = data.sellingPriceArray;
   const { customerArray } = data;
@@ -84,7 +135,7 @@ const addItemField = (
   const tableBody = document.querySelector("#table-body");
   var drp = document.createElement("select");
   drp.required = true;
-  drp.setAttribute('value', '');
+  drp.setAttribute("value", "");
   drp.classList.add("browser-default");
   drp.classList.add("item-dropdown");
   const disabledDrp = document.createElement("option");
@@ -92,15 +143,16 @@ const addItemField = (
   disabledDrp.setAttribute("selected", true);
   disabledDrp.innerHTML = "Choose an item";
   drp.appendChild(disabledDrp);
-  
+
   items.forEach((item) => {
     var optn = document.createElement("option");
     optn.setAttribute("value", item.id);
     optn.innerText = `${item.name}`;
     drp.appendChild(optn);
   });
-  if(fetchedItem)
-  drp.value = fetchedItem;
+  if (fetchedItem) {
+    drp.value = fetchedItem;
+  }
   drp.onchange = (e) => {
     makePaidZero();
     const itemId = e.target.value;
@@ -147,8 +199,7 @@ const addItemField = (
   quantityInput.classList.add("quantity-input");
   quantityInput.setAttribute("type", "number");
   quantityInput.setAttribute("placeholder", "Enter quantity");
-  if(fetchedQty)
-  quantityInput.value = fetchedQty;
+  if (fetchedQty) quantityInput.value = fetchedQty;
   quantityInput.oninput = (e) => {
     makePaidZero();
     const totalPriceEle =
@@ -168,8 +219,7 @@ const addItemField = (
   pricePerUnitInput.classList.add("price-per-unit-input");
   pricePerUnitInput.setAttribute("type", "number");
   pricePerUnitInput.setAttribute("placeholder", "price per unit");
-  if(fetchedPricePerUnit)
-  pricePerUnitInput.value = fetchedPricePerUnit;
+  if (fetchedPricePerUnit) pricePerUnitInput.value = fetchedPricePerUnit;
   pricePerUnitInput.oninput = (e) => {
     makePaidZero();
     const totalPriceEle = e.target.parentElement.nextElementSibling.children[0];
@@ -188,8 +238,7 @@ const addItemField = (
   totalPrice.setAttribute("placeholder", "total price");
   totalPrice.classList.add("price-value");
   totalPrice.setAttribute("type", "number");
-  if(fetchedPrice)
-  totalPrice.value = fetchedPrice;
+  if (fetchedPrice) totalPrice.value = fetchedPrice;
   drp.style.marginTop = 15;
   var row = document.createElement("tr");
   row.appendChild(drp);
@@ -268,13 +317,13 @@ const sendData = () => {
   const paid = document.querySelector("#money-paid").value;
   const saleExpectedDate = document.querySelector("#expected-date-input").value;
   const salePlacedDate = document.querySelector("#placed-date-input").value;
-  const customerId =  document.querySelector('#customer-dropdown').value;
+  const customerId = document.querySelector("#customer-dropdown").value;
   const sale = {
-    total, 
-    paid, 
-    saleExpectedDate, 
+    total,
+    paid,
+    saleExpectedDate,
     salePlacedDate,
-    customerId
+    customerId,
   };
   const itemList = document.querySelectorAll(".item-list");
   const allItems = [];
@@ -284,16 +333,15 @@ const sendData = () => {
     const price = item.children[3].children[0].value;
     allItems.push({ itemId, quantity, price, saleId });
   });
-  ipcRenderer.send('update-sale', {allItems, sale, saleId});
+  ipcRenderer.send("update-sale", { allItems, sale, saleId });
 };
 
-document.querySelector('#settle-sale').addEventListener('click', () => {
+document.querySelector("#settle-sale").addEventListener("click", () => {
   var newValue = 1;
-  if(fetchedData.sale.settled === 1)
-    newValue = 0;
-  ipcRenderer.send('mark-as-settled', {saleId, newValue});
-})
+  if (fetchedData.sale.settled === 1) newValue = 0;
+  ipcRenderer.send("mark-as-settled", { saleId, newValue });
+});
 
-ipcRenderer.on('sale-updated', (event) => {
+ipcRenderer.on("sale-updated", (event) => {
   location.reload();
-})
+});

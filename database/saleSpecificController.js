@@ -46,6 +46,32 @@ ipcMain.on("sale-specific-window-loaded", async (event, data) => {
   }
 });
 
+ipcMain.on('fetch-sold-item-data', async(event, saleId) => {
+  try{
+    const soldItemData = await SaleItemJunction.findAll({where: {saleId}, include: [Item]})
+    const products = [];
+    soldItemData.forEach(data => {
+      const description = data.dataValues.Item.dataValues.name
+      const quantity = data.dataValues.quantity;
+      const price = (data.dataValues.price/data.dataValues.quantity); 
+      products.push({description, quantity, price, 'tax-rate': 0});
+    })
+    event.sender.send('sold-items-fetched', products);
+  }catch(err){
+    dialog.showErrorBox("An error message", err.message);
+  }
+})
+
+ipcMain.on('fetch-customer-data-for-sale', async (event, customerId) => {
+  try{
+    const customerData = await Customer.findOne({ where: { id: customerId } });
+    const customer = customerData.dataValues;
+    event.sender.send("customer-data-fetched-for-sale", customer);
+  }catch(err){
+    dialog.showErrorBox("An error message", err.message);
+  }
+})
+
 ipcMain.on("mark-as-settled", async (event, { saleId, newValue }) => {
   try {
     const t = await sequelize.transaction();
