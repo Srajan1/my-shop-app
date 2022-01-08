@@ -32,6 +32,21 @@
       />
       <input
         type="text"
+        id="supplier-city"
+        placeholder="Enter supplier city"
+      />
+      <input
+        type="text"
+        id="supplier-pin-code"
+        placeholder="Enter supplier pin code"
+      />
+      <input
+        type="text"
+        id="supplier-state"
+        placeholder="Enter supplier state"
+      />
+      <input
+        type="text"
         id="supplier-description"
         placeholder="Enter supplier description"
       />
@@ -53,6 +68,15 @@
       <div class="col l4 right">
         <input id ="filter-address" type="text" placeholder="address" />
       </div>
+      <div class="col l4 right">
+        <input id ="filter-city" type="text" placeholder="city" />
+      </div>
+      <div class="col l4 right">
+        <input id ="filter-pin-code" type="text" placeholder="pin-code" />
+      </div>
+      <div class="col l4 right">
+        <input id ="filter-state" type="text" placeholder="state" />
+      </div>
       <div class="col center">
         <button type="submit" id="filter-supplier-details" class="btn">Filter</button>
       </div>
@@ -62,6 +86,8 @@
         <th>Name</th>
         <th>Phone number</th>
         <th>Address</th>
+        <th>City</th>
+        <th>State</th>
         <th>Manage</th>
       </thead>
       <tbody id="table-body"></tbody>

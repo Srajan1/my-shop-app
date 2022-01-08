@@ -44,6 +44,9 @@ document.querySelector("#update-details").addEventListener("click", () => {
   const supplierName = document.querySelector("#supplier-name").value;
   const supplierPhone = document.querySelector("#supplier-phone-number").value;
   const supplierAddress = document.querySelector("#supplier-address").value;
+  const supplierCity = document.querySelector("#supplier-city").value;
+  const supplierPinCode = document.querySelector("#supplier-pin-code").value;
+  const supplierState = document.querySelector("#supplier-state").value;
   const supplierDescription = document.querySelector(
     "#supplier-description"
   ).value;
@@ -52,6 +55,9 @@ document.querySelector("#update-details").addEventListener("click", () => {
   if (supplierPhone !== "") supplier.phoneNumber = supplierPhone;
   if (supplierAddress !== "") supplier.address = supplierAddress;
   if (supplierDescription !== "") supplier.description = supplierDescription;
+  if (supplierCity !== "") supplier.city = supplierCity;
+  if (supplierPinCode !== "") supplier.pinCode = supplierPinCode;
+  if (supplierState !== "") supplier.state = supplierState;
   ipcRenderer.send("update-supplier", { supplier, supplierId });
 });
 
@@ -64,6 +70,9 @@ ipcRenderer.on("supplier-data-fetched", (event, data) => {
   document.querySelector("#supplier-address").value = fetchedData.address;
   document.querySelector("#supplier-description").value =
     fetchedData.description;
+    document.querySelector("#supplier-city").value = fetchedData.city;
+    document.querySelector("#supplier-pin-code").value = fetchedData.pinCode;;
+    document.querySelector("#supplier-state").value = fetchedData.state;
   ipcRenderer.send("fetch-order-for-supplier", {
     supplierId,
     limit,

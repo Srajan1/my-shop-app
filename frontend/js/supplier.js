@@ -2,7 +2,6 @@ const electron = require("electron");
 const ipcRenderer = electron.ipcRenderer;
 const convertJsonToExcel = require('../partials/generateExcel');
 
-const addSuppierFo = function () {};
 let pageNumber = 1,
   totalPages,
   limit = 20,
@@ -30,15 +29,23 @@ const saveSupplier = async function (e) {
   const supplierName = document.querySelector("#supplier-name").value;
   const supplierPhone = document.querySelector("#supplier-phone-number").value;
   const supplierAddress = document.querySelector("#supplier-address").value;
+  const supplierCity = document.querySelector("#supplier-city").value;
+  const supplierPinCode = document.querySelector("#supplier-pin-code").value;
+  const supplierState = document.querySelector("#supplier-state").value;
   const supplierDescription = document.querySelector(
     "#supplier-description"
   ).value;
   const supplier = {};
   if (supplierName !== "") supplier.name = supplierName;
+  else{
+    ipcRenderer.send('show-message', ({heading: 'Invalid submission', message: 'Please enter name'}));
+  }
   if (supplierPhone !== "") supplier.phoneNumber = supplierPhone;
   if (supplierAddress !== "") supplier.address = supplierAddress;
+  if (supplierCity !== "") supplier.city = supplierCity;
+  if (supplierPinCode !== "") supplier.pinCode = supplierPinCode;
+  if (supplierState !== "") supplier.state = supplierState;
   if (supplierDescription !== "") supplier.description = supplierDescription;
-
   ipcRenderer.send("add-supplier", supplier);
 };
 
@@ -64,13 +71,21 @@ document
     const filterName = document.querySelector("#filter-name").value;
     const filterPhone = document.querySelector("#filter-phone").value;
     const filterAddress = document.querySelector("#filter-address").value;
+    const filterCity = document.querySelector("#filter-city").value;
+    const filterPinCode = document.querySelector("#filter-pin-code").value;
+    const filterState = document.querySelector("#filter-state").value;
     if (filterName) where.name = filterName;
     if (filterPhone) where.phone = filterPhone;
     if (filterAddress) where.address = filterAddress;
-
+    if (filterCity) where.city = filterCity;
+    if (filterPinCode) where.pinCode = filterPinCode;
+    if (filterState) where.state = filterState;
     document.querySelector("#filter-name").value = "";
     document.querySelector("#filter-phone").value = "";
     document.querySelector("#filter-address").value = "";
+    document.querySelector("#filter-city").value = "";
+    document.querySelector("#filter-pin-code").value = "";
+    document.querySelector("#filter-state").value = "";
     ipcRenderer.send("supplier-window-loaded", { pageNumber, where, limit });
   });
 
@@ -119,6 +134,8 @@ ipcRenderer.on("fetched-suppliers", (event, suppliersInfo) => {
     row.innerHTML = `<tr><td>${supplier.name}</td>
     <td>${supplier.phoneNumber}</td>
     <td>${supplier.address}</td>
+    <td>${supplier.city}</td>
+    <td>${supplier.state}</td>
     <td><a href="supplierSpecific.html" class="transparent btn manage-button"  id="${supplier.id}">📝</a></td></tr>`;
     tableBody.appendChild(row);
   });
