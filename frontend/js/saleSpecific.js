@@ -49,7 +49,8 @@ document.querySelector("#generate-invoice").addEventListener("click", () => {
   };
   data.products = products;
   data.settings = {
-    "currency": "INR"
+    "currency": "INR",
+    "tax-notation": "gst"
   };
   var name = fetchedData.sale.id.toString()+ '_' + date.toLocaleString().toString() + '.pdf';
   generateInvoice(data, name);

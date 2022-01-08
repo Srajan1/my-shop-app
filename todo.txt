@@ -1,1 +1,5 @@
-db to excel download
+Total pending to supplier, Customer and add history
+Set dynamic GST value
+Supplier, Customer pending in excel along with details
+In transaction history add mode of payment string 
+Mode of payment

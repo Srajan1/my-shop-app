@@ -54,7 +54,7 @@ ipcMain.on('fetch-sold-item-data', async(event, saleId) => {
       const description = data.dataValues.Item.dataValues.name
       const quantity = data.dataValues.quantity;
       const price = (data.dataValues.price/data.dataValues.quantity); 
-      products.push({description, quantity, price, 'tax-rate': 0});
+      products.push({description: description+' HSN: 123', quantity, price, 'tax-rate': 18});
     })
     event.sender.send('sold-items-fetched', products);
   }catch(err){

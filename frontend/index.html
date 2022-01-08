@@ -4,9 +4,50 @@
   
     <div id="navbar"></div>
   
-  <div class="col l10">
-    <input type="text" id="company-name" placeholder="Enter company name" />
-    <button class="btn" id="save-company-name">Save</button>
+  <div class="col l10" style="position: fixed; right: 0;">
+    <div class="card">
+      <h3 style="padding: 15px 20px" id="page-heading">My Company</h3>
+      <div class="card-action">
+        <a href="#" class="blue-text" id="edit-company-form-toggle">Edit Company Details</a>
+      </div>
+    </div>
+    <form style="display: none">
+      <input
+        type="text"
+        id="company-name"
+        placeholder="Enter company name(mandatory)"
+      />
+      <input
+        type="text"
+        id="gstin-number"
+        placeholder="Enter company GSTIN(mandatory)"
+      />
+      <input
+        type="text"
+        id="address"
+        placeholder="Enter company address"
+      />
+      <input
+        type="number"
+        id="phone-number1"
+        placeholder="Enter your phone number 1"
+      />
+      <input
+        type="number"
+        id="phone-number2"
+        placeholder="Enter your phone number 2"
+      />
+      <button id="update-details" class="btn">Update Data</button>
+    </form>
+    <div id="company-details" style="display: none;">
+      <ul class="collection">
+        <li class="collection-item" id="company-name-display"></li>
+        <li class="collection-item" id="company-gst-display"></li>
+        <li class="collection-item" id="company-address-display"></li>
+        <li class="collection-item" id="company-phone1-display"></li>
+        <li class="collection-item" id="company-phone2-display"></li>
+      </ul>
+    </div>
   </div>
 </div>
 <div id="footer"></div>
@@ -14,4 +55,5 @@
   require("./partials/header.js");
   require("./partials/navbar.js");
   require("./partials/footer.js");
+  require("./js/app.js");
 </script>
