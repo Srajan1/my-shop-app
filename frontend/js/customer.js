@@ -21,6 +21,9 @@ const saveCustomer = async function (e) {
   const customerName = document.querySelector("#customer-name").value;
   const customerPhone = document.querySelector("#customer-phone-number").value;
   const customerAddress = document.querySelector("#customer-address").value;
+  const customerCity = document.querySelector("#customer-city").value;
+  const customerPinCode = document.querySelector("#customer-pin-code").value;
+  const customerState = document.querySelector("#customer-state").value;
   const customerDescription = document.querySelector(
     "#customer-description"
   ).value;
@@ -28,8 +31,11 @@ const saveCustomer = async function (e) {
   if (customerName !== "") customer.name = customerName;
   if (customerPhone !== "") customer.phoneNumber = customerPhone;
   if (customerAddress !== "") customer.address = customerAddress;
+  if (customerCity !== "") customer.city = customerCity;
+  if (customerPinCode !== "") customer.pinCode = customerPinCode;
+  if (customerState !== "") customer.state = customerState;
   if (customerDescription !== "") customer.description = customerDescription;
-
+    console.log(customer);
   ipcRenderer.send("add-customer", customer);
 };
 
@@ -55,13 +61,21 @@ document
     const filterName = document.querySelector("#filter-name").value;
     const filterPhone = document.querySelector("#filter-phone").value;
     const filterAddress = document.querySelector("#filter-address").value;
+    const filterCity = document.querySelector("#filter-city").value;
+    const filterPinCode = document.querySelector("#filter-pin-code").value;
+    const filterState = document.querySelector("#filter-state").value;
     if (filterName) where.name = filterName;
     if (filterPhone) where.phone = filterPhone;
     if (filterAddress) where.address = filterAddress;
-
+    if (filterCity) where.city = filterCity;
+    if (filterPinCode) where.pinCode = filterPinCode;
+    if (filterState) where.state = filterState;
     document.querySelector("#filter-name").value = "";
     document.querySelector("#filter-phone").value = "";
     document.querySelector("#filter-address").value = "";
+    document.querySelector("#filter-city").value = "";
+    document.querySelector("#filter-state").value = "";
+    document.querySelector("#filter-pin-code").value = "";
     ipcRenderer.send("customer-window-loaded", { pageNumber, where, limit });
   });
 
@@ -77,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   const saveCustomerDetails = document.querySelector("#save-customer-details");
   saveCustomerDetails.addEventListener("click", (e) => {
+    e.preventDefault();
     saveCustomer();
   });
 

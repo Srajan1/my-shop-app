@@ -20,6 +20,15 @@ const Customer = sequelize.define(
     address: {
       type: DataTypes.STRING,
     },
+    city: {
+      type: DataTypes.STRING
+    },
+    pinCode: {
+      type: DataTypes.STRING
+    },
+    state: {
+      type: DataTypes.STRING
+    },
     description: {
       type: DataTypes.STRING(10000),
     },

@@ -44,6 +44,9 @@ document.querySelector("#update-details").addEventListener("click", () => {
   const customerName = document.querySelector("#customer-name").value;
   const customerPhone = document.querySelector("#customer-phone-number").value;
   const customerAddress = document.querySelector("#customer-address").value;
+  const customerCity = document.querySelector("#customer-city").value;
+  const customerPinCode = document.querySelector("#customer-pin-code").value;
+  const customerState = document.querySelector("#customer-state").value;
   const customerDescription = document.querySelector(
     "#customer-description"
   ).value;
@@ -51,6 +54,9 @@ document.querySelector("#update-details").addEventListener("click", () => {
   if (customerName !== "") customer.name = customerName;
   if (customerPhone !== "") customer.phoneNumber = customerPhone;
   if (customerAddress !== "") customer.address = customerAddress;
+  if (customerCity !== "") customer.city = customerCity;
+  if (customerPinCode !== "") customer.pinCode = customerPinCode;
+  if (customerState !== "") customer.state = customerState;
   if (customerDescription !== "") customer.description = customerDescription;
   ipcRenderer.send("update-customer", { customer, customerId });
 });
@@ -62,6 +68,9 @@ ipcRenderer.on("customer-data-fetched", (event, data) => {
   document.querySelector("#customer-phone-number").value =
     fetchedData.phoneNumber;
   document.querySelector("#customer-address").value = fetchedData.address;
+  document.querySelector("#customer-city").value = fetchedData.city;
+  document.querySelector("#customer-state").value = fetchedData.state;
+  document.querySelector("#customer-pin-code").value = fetchedData.pinCode;
   document.querySelector("#customer-description").value =
     fetchedData.description;
   ipcRenderer.send("fetch-sale-for-customer", {

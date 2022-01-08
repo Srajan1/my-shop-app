@@ -1,5 +1,5 @@
 document.querySelector("#navbar").innerHTML =
-  '<div class="col l2 brown darken-1" style="height: 100%; position: fixed">' +
+  '<div class="col l2 brown darken-1" style="height: 100%; position: fixed; right: 0">' +
   '<div class="row" style="padding: 0 15px"><img class="responsive-img" style="width: 100%" src="./partials/companyLogo.png"></div>' +
   '<div class="row" style="padding: 0 15px"><a class="white-text" style="display: block" href="./index.html">Home</a></div>' +
   '<div class="row" style="padding: 0 15px"><a class="white-text" style="display: block" href="./supplier.html">Supplier</a></div>' +

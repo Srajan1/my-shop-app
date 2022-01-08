@@ -1,8 +1,8 @@
 <div id="header"></div>
 <div id="content" class="row">
-  <div id="navbar"></div>
+  
 
-  <div class="col l10" style="position: fixed; right: 0;">
+  <div class="col l10">
     <div class="card">
       <h3 style="padding: 15px 20px">Customers</h3>
       <div class="card-action">
@@ -31,6 +31,21 @@
       />
       <input
         type="text"
+        id="customer-city"
+        placeholder="Enter customer city"
+      />
+      <input
+        type="text"
+        id="customer-pin-code"
+        placeholder="Enter customer pin code"
+      />
+      <input
+        type="text"
+        id="customer-state"
+        placeholder="Enter customer state"
+      />
+      <input
+        type="text"
         id="customer-description"
         placeholder="Enter customer description"
       />
@@ -52,6 +67,20 @@
       <div class="col l4 right">
         <input id ="filter-address" type="text" placeholder="address" />
       </div>
+
+
+      <div class="col l4 left">
+        <input id ="filter-city" type="text" placeholder="city" />
+      </div>
+
+      <div class="col l4 center">
+        <input id ="filter-pin-code" type="number" placeholder="pin-code number"/>
+      </div>
+
+      <div class="col l4 right">
+        <input id ="filter-state" type="text" placeholder="state" />
+      </div>
+      
       <div class="col center">
         <button type="submit" id="filter-customer-details" class="btn">Filter</button>
       </div>
@@ -79,6 +108,7 @@
       </li>
     </ul>
   </div>
+  <div id="navbar"></div>
 </div>
 <div id="footer"></div>
 

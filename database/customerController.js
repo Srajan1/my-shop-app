@@ -14,7 +14,12 @@ ipcMain.on("customer-window-loaded", async function (event, query) {
     where.address = { [Op.like]: "%" + query.address + "%" };
   if (query.phone != null)
     where.phoneNumber = { [Op.like]: "%" + query.phone + "%" };
-
+    if (query.city != null)
+    where.city = { [Op.like]: "%" + query.city + "%" };
+    if (query.state != null)
+    where.state = { [Op.like]: "%" + query.state + "%" };
+    if (query.pinCode != null)
+    where.pinCode = { [Op.like]: "%" + query.pinCode + "%" };
   try {
     const customers = await Customer.findAndCountAll({
       order: [["createdAt", "DESC"]],
