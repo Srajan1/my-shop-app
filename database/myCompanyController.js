@@ -5,7 +5,6 @@ const { Op } = require("sequelize");
 
 ipcMain.on("company-window-loaded", async (event) => {
   try {
-    console.log("here");
     const details = await Company.findAll();
     if (details.length === 0) {
       event.sender.send("company-details-not-available");

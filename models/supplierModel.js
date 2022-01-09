@@ -30,7 +30,11 @@ Supplier.init({
     },
     description: {
       type: DataTypes.STRING(10000),
-    }
+    },
+    remainingBalance: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
   }, {
     sequelize,
     tableName: 'suppliers', freezeTableName: true 

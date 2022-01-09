@@ -3,6 +3,7 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const sequelize = require("./db");
 const { Op } = require("sequelize");
 const Sale = require("../models/saleModel");
+const CustomerTransaction = require('../models/customerTransactionModel')
 
 ipcMain.on("customer-specific-window-loaded", async (event, customerId) => {
   try {

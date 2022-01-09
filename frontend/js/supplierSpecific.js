@@ -64,6 +64,8 @@ document.querySelector("#update-details").addEventListener("click", () => {
 ipcRenderer.on("supplier-data-fetched", (event, data) => {
   fetchedData = data;
   document.querySelector("#page-heading").innerText = fetchedData.name;
+  const balanceSpan = document.querySelector('#deal-details');
+  balanceSpan.innerText = `total dealt with ₹${fetchedData.remainingBalance}`
   document.querySelector("#supplier-name").value = fetchedData.name;
   document.querySelector("#supplier-phone-number").value =
     fetchedData.phoneNumber;
@@ -96,8 +98,6 @@ ipcRenderer.on("order-fetched-for-supplier", (event, { orderArray, count }) => {
     const settled = order.settled;
     var row = document.createElement("tr");
     row.innerHTML = `<tr>
-      <td>${order.total}</td>
-      <td>${order.paid}</td>
       <td>${order.total + order.paid}</td>
       <td>${order.settled == 0 ? "Not settled" : "Settled"}</td>
       <td>${order.orderPlacedDate.toDateString()}</td>

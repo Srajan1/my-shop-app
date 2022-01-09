@@ -1,0 +1,37 @@
+<div id="header"></div>
+<div id="content" class="row">
+  
+
+  <div class="col l10">
+    <div style="padding: 15px 20px" class="card">
+      <h3>Transaction History</h3>
+      <span id="page-heading"></span>
+      <br>
+      <span id="paid-total"></span>
+    </div>
+    <form id="add-history-form">
+        <input type="number" id="paid-amount" placeholder="Amount Paid">
+        <input type="date" id="paid-date" placeholder="Date">
+        <input type="text" id="payment-mode" placeholder="payment mode">
+        <button id="add-history-button" class="btn" type="submit">Add</button>
+    </form>
+    <table class="striped">
+      <thead>
+        <th>Paid</th>
+        <th>Date</th>
+        <th>Payment Mode</th>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+  <div id="navbar"></div>
+</div>
+
+<div id="footer"></div>
+
+<script>
+  require("./partials/header.js");
+  require("./partials/navbar.js");
+  require("./partials/footer.js");
+  require('./js/supplierTransactionHistory.js')
+</script>

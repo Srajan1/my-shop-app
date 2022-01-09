@@ -3,10 +3,17 @@
 
   <div class="col l10">
     <div class="card">
-      <h3 style="padding: 15px 20px" id="page-heading">Suppliers</h3>
+      <h3 style="padding: 20px 0 0 15px" id="page-heading">Suppliers</h3>
+      <span  style="padding: 0 0 20px 15" id="deal-details"></span>
       <div class="card-action">
         <a href="#" class="blue-text" id="update-supplier-form-toggle"
           >Update supplier details</a
+        >
+        <a href="./supplierTransactionHistory.html" class="blue-text" id="transaction-history-form-toggle"
+          >View transaction history</a
+        >
+        <a href="#" class="green-text" id="download-excel"
+          >Download Excel data</a
         >
       </div>
     </div>
@@ -50,8 +57,6 @@
     </form>
     <table>
       <thead>
-        <th>Remaining</th>
-        <th>Paid</th>
         <th>Total</th>
         <th>Settled</th>
         <th>Order placed</th>

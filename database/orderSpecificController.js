@@ -129,6 +129,13 @@ ipcMain.on("mark-as-settled", async (event, { orderId, newValue }) => {
 ipcMain.on("update-order", async (event, { allItems, order, orderId }) => {
   try {
     const t = await sequelize.transaction();
+    const supplierId = order.supplierId;
+    const currentPrice = await Order.findOne({ where: { id: orderId }, transaction: t });
+    const supplierData = await Supplier.findOne({ where: { id: supplierId }, transaction: t });
+    const data = {
+      remainingBalance: parseInt(supplierData.dataValues.remainingBalance) - parseInt(currentPrice.dataValues.total)+parseInt(order.total)
+    };
+    await Supplier.update(data, { where: { id: supplierId }, transaction: t })
     await Order.update(order, { where: { id: orderId }, transaction: t });
     await OrderItemJunction.destroy({ where: { orderId }, transaction: t });
     await OrderItemJunction.bulkCreate(allItems, { transaction: t });

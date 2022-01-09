@@ -96,9 +96,7 @@ ipcRenderer.on("sale-fetched-for-customer", (event, { saleArray, count }) => {
     const settled = sale.settled;
     var row = document.createElement("tr");
     row.innerHTML = `<tr>
-      <td>${sale.total}</td>
       <td>${sale.paid}</td>
-      <td>${sale.total + sale.paid}</td>
       <td>${sale.settled == 0 ? "Not settled" : "Settled"}</td>
       <td>${sale.salePlacedDate.toDateString()}</td>
       <td>${sale.saleExpectedDate.toDateString()}</td>

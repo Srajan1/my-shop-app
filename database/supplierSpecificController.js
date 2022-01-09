@@ -3,6 +3,7 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const sequelize = require("./db");
 const { Op } = require("sequelize");
 const Order = require("../models/orderModel");
+const SupplierTransaction = require('../models/supplierTransactionModel')
 
 ipcMain.on("supplier-specific-window-loaded", async (event, supplierId) => {
   try {
@@ -35,3 +36,26 @@ ipcMain.on("update-supplier", async (event, data) => {
     dialog.showErrorBox("An error message", err.message);
   }
 });
+
+ipcMain.on('supplier-transaction-window-loaded', async(event, supplierId) => {
+  try{  
+    const supplier = await Supplier.findOne({where: {id: supplierId}});
+    const supplierTransaction = await SupplierTransaction.findAll({where: {supplierId}, order: [["createdAt", "DESC"]],});
+    const supplierTransactionArray = [];
+    supplierTransaction.forEach( transaction => {
+      supplierTransactionArray.push(transaction.dataValues);
+    })
+    event.sender.send('supplier-transaction-loaded', ({supplier: supplier.dataValues, transactions: supplierTransactionArray}));
+  }catch{
+    dialog.showErrorBox("An error message", err.message);
+  }
+})
+
+ipcMain.on('add-supplier-history', async(event, data) => {
+  try{
+    await SupplierTransaction.create(data);
+    event.sender.send('supplier-transaction-added');
+  }catch(err){
+    dialog.showErrorBox("An error message", err.message);
+  }
+})
