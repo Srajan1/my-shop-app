@@ -328,7 +328,7 @@ const sendData = () => {
 document.querySelector("#settle-sale").addEventListener("click", () => {
   var newValue = 1;
   if (fetchedData.sale.settled === 1) newValue = 0;
-  ipcRenderer.send("mark-as-settled", { saleId, newValue });
+  ipcRenderer.send("mark-sale-as-settled", { saleId, newValue });
 });
 
 ipcRenderer.on("sale-updated", (event) => {

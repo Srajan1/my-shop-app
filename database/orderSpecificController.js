@@ -46,9 +46,9 @@ ipcMain.on("order-specific-window-loaded", async (event, data) => {
   }
 });
 
-ipcMain.on("mark-as-settled", async (event, { orderId, newValue }) => {
+ipcMain.on("mark-order-as-settled", async (event, { orderId, newValue }) => {
+  const t = await sequelize.transaction();
   try {
-    const t = await sequelize.transaction();
     if (newValue === 1) {
       const items = await OrderItemJunction.findAll({
         where: { orderId },

@@ -72,7 +72,7 @@ ipcMain.on('fetch-customer-data-for-sale', async (event, customerId) => {
   }
 })
 
-ipcMain.on("mark-as-settled", async (event, { saleId, newValue }) => {
+ipcMain.on("mark-sale-as-settled", async (event, { saleId, newValue }) => {
   const t = await sequelize.transaction();
   try {
     if (newValue === 0) {

@@ -281,7 +281,7 @@ document.querySelector('#settle-order').addEventListener('click', () => {
   var newValue = 1;
   if(fetchedData.order.settled === 1)
     newValue = 0;
-  ipcRenderer.send('mark-as-settled', {orderId, newValue});
+  ipcRenderer.send('mark-order-as-settled', {orderId, newValue});
 })
 
 ipcRenderer.on('order-updated', (event) => {
