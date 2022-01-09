@@ -19,6 +19,7 @@ ipcMain.on("item-specific-window-loaded", async (event, itemId) => {
     item.id = itemData.dataValues.id;
     item.name = itemData.dataValues.name;
     item.available = itemData.dataValues.available;
+    item.hsn = itemData.dataValues.hsn;
     const metric = itemData.dataValues.Metric.dataValues;
     event.sender.send("item-metric-list-fetched", {
       item,

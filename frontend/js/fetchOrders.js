@@ -51,8 +51,6 @@ ipcRenderer.on("orders-fetched", (event, data) => {
     const settled = order.settled;
     var row = document.createElement("tr");
     row.innerHTML = `<tr><td>${order.Supplier.dataValues.name}</td>
-      <td>${order.total}</td>
-      <td>${order.paid}</td>
       <td>${order.total + order.paid}</td>
       <td>${order.settled == 0 ? "Not settled" : "Settled"}</td>
       <td>${order.orderPlacedDate.toDateString()}</td>

@@ -52,8 +52,6 @@ ipcRenderer.on("sales-fetched", (event, data) => {
     var row = document.createElement("tr");
     row.innerHTML = `<tr><td>${sale.Customer.dataValues.name}</td>
       <td>${sale.total}</td>
-      <td>${sale.paid}</td>
-      <td>${sale.total + sale.paid}</td>
       <td>${sale.settled == 0 ? "Not settled" : "Settled"}</td>
       <td>${sale.salePlacedDate.toDateString()}</td>
       <td>${sale.saleExpectedDate.toDateString()}</td>

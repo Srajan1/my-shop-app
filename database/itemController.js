@@ -9,6 +9,8 @@ ipcMain.on("item-window-loaded", async (event, queryData) => {
     const where = {};
     if (queryData.where.name != null)
       where.name = { [Op.like]: "%" + queryData.where.name + "%" };
+    if (queryData.where.hsn != null)
+      where.hsn = { [Op.like]: "%" + queryData.where.hsn + "%" };
     const metrics = await Metric.findAll();
     const items = await Item.findAndCountAll({
       where,
@@ -23,7 +25,7 @@ ipcMain.on("item-window-loaded", async (event, queryData) => {
     metrics.forEach((metric) => metricArray.push(metric.dataValues));
     items.rows.forEach((item) => itemArray.push(item.dataValues));
     const itemCount = items.count;
-    
+
     event.sender.send("item-metric-list-fetched", {
       metricArray,
       itemArray,
@@ -36,7 +38,6 @@ ipcMain.on("item-window-loaded", async (event, queryData) => {
 
 ipcMain.on("add-item", async (event, item) => {
   try {
-    
     await Item.create(item);
     event.sender.send("item-added");
   } catch (err) {

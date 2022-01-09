@@ -14,6 +14,9 @@ const Item = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    hsn: {
+      type: DataTypes.STRING
+    },
     available: {
       type: DataTypes.FLOAT,
       defaultValue: 0,

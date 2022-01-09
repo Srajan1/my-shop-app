@@ -20,6 +20,12 @@
 
       <select class="browser-default" id="item-metric-dropdown"></select>
       <input
+        type="text"
+        id="hsn"
+        placeholder="Enter item hsn"
+        required
+      />
+      <input
         type="number"
         id="item-available"
         placeholder="Item available in stock"
@@ -29,9 +35,13 @@
     <form id="filter-item-form" style="display: none">
       <input
         type="text"
-        required
         placeholder="Enter name of item"
         id="filter-item-input"
+      />
+      <input
+        type="text"
+        placeholder="Enter name of item"
+        id="filter-hsn-input"
       />
       <button class="btn" id="filter-button">Search</button>
     </form>
@@ -39,6 +49,7 @@
       <thead>
         <th>Name</th>
         <th>Metric</th>
+        <th>HSN</th>
         <th>In Stock</th>
         <th>Manage</th>
       </thead>

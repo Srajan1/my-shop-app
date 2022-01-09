@@ -40,7 +40,8 @@ ipcRenderer.on("item-metric-list-fetched", (event, data) => {
   items.forEach((item) => {
     var row = document.createElement("tr");
     row.innerHTML = `<tr><td>${item.name}</td>
-      <td>${item.Metric.dataValues.name}</td>
+    <td>${item.Metric.dataValues.name}</td>
+    <tr><td>${item.hsn}</td>
       <td>${item.available}</td>
       <td><a href="itemSpecific.html" class="transparent btn manage-button" id="${item.id}"><abbr title="View">📝</abbr></a></td></tr>`;
     tableBody.appendChild(row);
@@ -78,8 +79,11 @@ document.querySelector("#add-form-toggle").addEventListener("click", () => {
 document.querySelector("#filter-button").addEventListener("click", (e) => {
   e.preventDefault();
   const name = document.querySelector("#filter-item-input").value;
+  if(name)
   where.name = name;
-
+  const hsn = document.querySelector("#filter-hsn-input").value;
+  if(hsn)
+  where.hsn = hsn;
   ipcRenderer.send("item-window-loaded", { pageNumber, perPage, where });
 });
 
@@ -94,9 +98,11 @@ addItemButton.addEventListener("click", (e) => {
   const itemName = document.querySelector("#item-name").value;
   const itemMetricId = document.querySelector("#item-metric-dropdown").value;
   const itemAvailable = document.querySelector("#item-available").value;
+  const itemHsn = document.querySelector("#hsn").value;
   const item = {
     name: itemName,
     metricId: itemMetricId,
+    hsn: itemHsn,
     available: itemAvailable,
   };
   ipcRenderer.send("add-item", item);

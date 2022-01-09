@@ -7,7 +7,6 @@ var items = [],
   costPrice;
 
 const makePaidZero = () => {
-  document.querySelector("#money-paid").value = 0;
   document.querySelector("#total-order-value").value = null;
 };
 
@@ -45,7 +44,7 @@ const populateOrderData = (supplierArray) => {
   document.querySelector("#placed-date-input").value = convert(
     fetchedData.order.orderPlacedDate
   );
-  document.querySelector("#money-paid").value = fetchedData.order.paid;
+  
   document.querySelector("#total-order-value").value = fetchedData.order.total;
 };
 
@@ -209,15 +208,6 @@ const addItemField = (
   tableBody.appendChild(row);
 };
 
-document.querySelector("#money-paid").oninput = () => {
-  const totalPrices = document.querySelectorAll(".price-value");
-  var total = 0;
-  totalPrices.forEach((price) => {
-    total += parseInt(price.value);
-  });
-  document.querySelector("#total-order-value").value =
-    total - document.querySelector("#money-paid").value;
-};
 
 document.querySelector("#add-another-item").addEventListener("click", (e) => {
   e.preventDefault();
@@ -265,13 +255,13 @@ document.querySelector("#update-the-order").addEventListener("click", (e) => {
 
 const sendData = () => {
   const total = document.querySelector("#total-order-value").value;
-  const paid = document.querySelector("#money-paid").value;
+  
   const orderExpectedDate = document.querySelector("#expected-date-input").value;
   const orderPlacedDate = document.querySelector("#placed-date-input").value;
   const supplierId =  document.querySelector('#supplier-dropdown').value;
   const order = {
     total, 
-    paid, 
+    
     orderExpectedDate, 
     orderPlacedDate,
     supplierId

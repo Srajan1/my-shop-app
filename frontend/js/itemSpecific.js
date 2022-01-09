@@ -13,6 +13,8 @@ ipcRenderer.on("item-metric-list-fetched", (event, data) => {
   itemNameInput.setAttribute("value", item.name);
   const itemInStock = document.querySelector("#item-in-stock");
   itemInStock.setAttribute("value", item.available);
+  const itemHSN = document.querySelector("#item-hsn");
+  itemHSN.setAttribute("value", item.hsn);
   const dropdown = document.querySelector("#item-metric-dropdown");
   dropdown.innerHTML = "";
   metricArray.forEach((metric) => {
@@ -49,10 +51,6 @@ ipcRenderer.on("prices-fetched", (event, data) => {
       <td><input type="number" placeholder="enter price" id="new-cost-price"></td></tr>`;
       tableBody.appendChild(row);
     costPrices.forEach((costPrice) => {
-      // if(!costPrice.dataValues.toDate){
-      //   costPrice.dataValues.toDate = new Date()
-      //   console.log(costPrice.dataValues.toDate);
-      // }
       var row = document.createElement("tr");
       row.innerHTML = `<tr><td>${costPrice.dataValues.fromDate.toDateString()}</td>
       <td>${costPrice.dataValues.toDate ? costPrice.dataValues.toDate.toDateString() : 'Current Price'}</td>
@@ -82,10 +80,6 @@ ipcRenderer.on("prices-fetched", (event, data) => {
       <td><input type="number" placeholder="enter price" id="new-selling-price"></td></tr>`;
       tableBody.appendChild(row);
     sellingPrices.forEach((sellingPrice) => {
-      // if(!sellingPrice.dataValues.toDate){
-      //   sellingPrice.dataValues.toDate = new Date()
-      //   console.log(sellingPrice.dataValues.toDate);
-      // }
       var row = document.createElement("tr");
       row.innerHTML = `<tr><td>${sellingPrice.dataValues.fromDate.toDateString()}</td>
       <td>${sellingPrice.dataValues.toDate ? sellingPrice.dataValues.toDate.toDateString() : 'Current Price'}</td>
@@ -126,11 +120,13 @@ document.querySelector('#save-cost-price').addEventListener('click', () => {
 document.querySelector("#update-item-button").addEventListener("click", () => {
   const itemName = document.querySelector("#item-name-input").value;
   const itemInStock = document.querySelector("#item-in-stock").value;
+  const itemHSN = document.querySelector("#item-hsn").value;
   const metric = document.querySelector("#item-metric-dropdown").value;
   const item = {
     name: itemName,
     available: itemInStock,
     metricId: metric,
+    hsn: itemHSN
   };
   ipcRenderer.send("update-item", { itemId, item });
 });

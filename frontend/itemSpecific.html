@@ -7,17 +7,21 @@
       <h3 id="heading"></h3>
     </div>
     <form class="row" id="update-item-form">
-      <div class="col l4">
+      <div class="col l3">
         <label for="item-name-input">Name</label>
         <input type="text" id="item-name-input" required/>
       </div>
-      <div class="col l4">
+      <div class="col l3">
         <label for="item-metric-dropdown">Metric</label>
         <select class="browser-default" id="item-metric-dropdown"></select>
       </div>
-      <div class="col l4">
+      <div class="col l3">
         <label for="item-in-stock">In Stock</label>
         <input type="number" id="item-in-stock" />
+      </div>
+      <div class="col l3">
+        <label for="item-hsn">HSN </label>
+        <input type="text" id="item-hsn" />
       </div>
       <button id="update-item-button" class="btn">Update</button>
     </form>

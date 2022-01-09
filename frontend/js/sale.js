@@ -4,7 +4,6 @@ var items = [],
   sellingPrice;
 
 const makePaidZero = () => {
-  document.querySelector("#money-paid").value = 0;
   document.querySelector("#total-sale-value").value = null;
 };
 
@@ -133,15 +132,6 @@ document.querySelector("#add-another-item").addEventListener("click", (e) => {
   addItemField();
 });
 
-document.querySelector("#money-paid").oninput = () => {
-  const totalPrices = document.querySelectorAll(".price-value");
-  var total = 0;
-  totalPrices.forEach((price) => {
-    total += parseInt(price.value);
-  });
-  document.querySelector("#total-sale-value").value =
-    total - document.querySelector("#money-paid").value;
-};
 
 const populateCustomers = (customerArray) => {
   const dropdown = document.querySelector("#customer-dropdown");
@@ -214,13 +204,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const sendData = () => {
   const total = document.querySelector("#total-sale-value").value;
-  const paid = document.querySelector("#money-paid").value;
   const saleExpectedDate = document.querySelector("#expected-date-input").value;
   const salePlacedDate = document.querySelector("#placed-date-input").value;
   const customerId =  document.querySelector('#customer-dropdown').value;
   const sale = {
     total, 
-    paid, 
     saleExpectedDate, 
     salePlacedDate,
     customerId
