@@ -1,6 +1,7 @@
 const electron = require("electron");
 const ipcRenderer = electron.ipcRenderer;
 const supplierId = sessionStorage.getItem("supplierId");
+const convertJsonToExcel = require('../partials/generateExcel');
 
 var fetchedData, totalPaid = 0;
 
@@ -32,11 +33,31 @@ ipcRenderer.on("supplier-transaction-added", () => {
   location.reload();
 });
 
+document.querySelector('#download-excel').addEventListener('click', () => {
+  const excelArray = [];
+  fetchedData.transactions.forEach(trans => {
+    const transaction = {};
+    transaction.name = fetchedData.supplier.name;
+    transaction.phoneNumber = fetchedData.supplier.phoneNumber;
+    transaction.paid = trans.paid;
+    transaction.date = trans.date.toDateString();
+    transaction.paymentMode = trans.paymentMode;
+    excelArray.push(transaction);
+  })
+  convertJsonToExcel(excelArray);
+})
+
+document.querySelector('#add-history').addEventListener('click', () => {
+  if(document.querySelector('#add-history-form').style.display === 'none')
+  document.querySelector('#add-history-form').style.display = 'block';
+  else document.querySelector('#add-history-form').style.display = 'none'
+})
+
 ipcRenderer.on("supplier-transaction-loaded", (event, data) => {
   fetchedData = data;
   document.querySelector(
     "#page-heading"
-  ).innerText = `${fetchedData.supplier.name} has dealt total ₹${fetchedData.supplier.remainingBalance}`;
+  ).innerText = `${fetchedData.supplier.name} has sold to you total ₹${fetchedData.supplier.totalDeal}`;
   const tableBody = document.querySelector("#table-body");
   tableBody.innerHTML = "";
   fetchedData.transactions.forEach((transaction) => {

@@ -133,7 +133,7 @@ ipcMain.on("update-order", async (event, { allItems, order, orderId }) => {
     const currentPrice = await Order.findOne({ where: { id: orderId }, transaction: t });
     const supplierData = await Supplier.findOne({ where: { id: supplierId }, transaction: t });
     const data = {
-      remainingBalance: parseInt(supplierData.dataValues.remainingBalance) - parseInt(currentPrice.dataValues.total)+parseInt(order.total)
+      totalDeal: parseInt(supplierData.dataValues.totalDeal) - parseInt(currentPrice.dataValues.total)+parseInt(order.total)
     };
     await Supplier.update(data, { where: { id: supplierId }, transaction: t })
     await Order.update(order, { where: { id: orderId }, transaction: t });

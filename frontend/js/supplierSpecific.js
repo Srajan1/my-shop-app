@@ -65,7 +65,7 @@ ipcRenderer.on("supplier-data-fetched", (event, data) => {
   fetchedData = data;
   document.querySelector("#page-heading").innerText = fetchedData.name;
   const balanceSpan = document.querySelector('#deal-details');
-  balanceSpan.innerText = `total dealt with ₹${fetchedData.remainingBalance}`
+  balanceSpan.innerText = `total dealt with ₹${fetchedData.totalDeal}`
   document.querySelector("#supplier-name").value = fetchedData.name;
   document.querySelector("#supplier-phone-number").value =
     fetchedData.phoneNumber;

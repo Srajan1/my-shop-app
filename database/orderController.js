@@ -67,8 +67,8 @@ ipcMain.on("place-order", async (event, query) => {
       transaction: t
     });
     const data = {
-      remainingBalance:
-        supplier.dataValues.remainingBalance + parseInt(orderData.total),
+      totalDeal:
+        supplier.dataValues.totalDeal + parseInt(orderData.total),
     };
     await Supplier.update(data, { where: { id: supplierId }, transaction: t});
     t.commit();

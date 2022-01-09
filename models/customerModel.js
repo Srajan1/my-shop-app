@@ -32,7 +32,7 @@ const Customer = sequelize.define(
     description: {
       type: DataTypes.STRING(10000),
     },
-    remainingBalance: {
+    totalDeal: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
