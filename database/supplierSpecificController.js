@@ -46,7 +46,7 @@ ipcMain.on('supplier-transaction-window-loaded', async(event, supplierId) => {
       supplierTransactionArray.push(transaction.dataValues);
     })
     event.sender.send('supplier-transaction-loaded', ({supplier: supplier.dataValues, transactions: supplierTransactionArray}));
-  }catch{
+  }catch(err){
     dialog.showErrorBox("An error message", err.message);
   }
 })

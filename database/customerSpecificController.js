@@ -36,3 +36,26 @@ ipcMain.on("update-customer", async (event, data) => {
     dialog.showErrorBox("An error message", err.message);
   }
 });
+
+ipcMain.on('customer-transaction-window-loaded', async(event, customerId) => {
+  try{  
+    const customer = await Customer.findOne({where: {id: customerId}});
+    const customerTransaction = await CustomerTransaction.findAll({where: {customerId}, order: [["createdAt", "DESC"]],});
+    const customerTransactionArray = [];
+    customerTransaction.forEach( transaction => {
+      customerTransactionArray.push(transaction.dataValues);
+    })
+    event.sender.send('customer-transaction-loaded', ({customer: customer.dataValues, transactions: customerTransactionArray}));
+  }catch(err){
+    dialog.showErrorBox("An error message", err.message);
+  }
+})
+
+ipcMain.on('add-customer-history', async(event, data) => {
+  try{
+    await CustomerTransaction.create(data);
+    event.sender.send('customer-transaction-added');
+  }catch(err){
+    dialog.showErrorBox("An error message", err.message);
+  }
+})

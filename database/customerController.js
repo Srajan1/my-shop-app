@@ -40,6 +40,17 @@ ipcMain.on("customer-window-loaded", async function (event, query) {
   }
 });
 
+ipcMain.on("fetch-all-customers", async (event) => {
+  try {
+    const customerData = await Customer.findAll();
+    const customers = [];
+    customerData.forEach((customer) => customers.push(customer.dataValues));
+    event.sender.send("all-customers-fetched", customers);
+  } catch (err) {
+    dialog.showErrorBox("An error message", err.message);
+  }
+});
+
 ipcMain.on("add-customer", async function (event, customer) {
   try {
     const newCustomer = await Customer.create(customer);

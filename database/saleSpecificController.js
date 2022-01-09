@@ -73,8 +73,8 @@ ipcMain.on('fetch-customer-data-for-sale', async (event, customerId) => {
 })
 
 ipcMain.on("mark-as-settled", async (event, { saleId, newValue }) => {
+  const t = await sequelize.transaction();
   try {
-    const t = await sequelize.transaction();
     if (newValue === 0) {
       const items = await SaleItemJunction.findAll({
         where: { saleId },
@@ -153,14 +153,22 @@ ipcMain.on("mark-as-settled", async (event, { saleId, newValue }) => {
 });
 
 ipcMain.on("update-sale", async (event, { allItems, sale, saleId }) => {
+  const t = await sequelize.transaction();
   try {
-    const t = await sequelize.transaction();
+    const customerId = sale.customerId;
+    const currentPrice = await Sale.findOne({ where: { id: saleId }, transaction: t });
+    const customerData = await Customer.findOne({ where: { id: customerId }, transaction: t });
+    const data = {
+      totalDeal: parseInt(customerData.dataValues.totalDeal) - parseInt(currentPrice.dataValues.total)+parseInt(sale.total)
+    };
+    await Customer.update(data, { where: { id: customerId }, transaction: t })
     await Sale.update(sale, { where: { id: saleId }, transaction: t });
     await SaleItemJunction.destroy({ where: { saleId }, transaction: t });
     await SaleItemJunction.bulkCreate(allItems, { transaction: t });
     t.commit();
     event.sender.send("sale-updated");
   } catch (err) {
+    console.log(err);
     await t.rollback();
     dialog.showErrorBox("An error message", err.message);
   }

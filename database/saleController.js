@@ -1,6 +1,7 @@
 const Sale = require("../models/saleModel");
 const SaleItemJunction = require("../models/saleItemJunction");
 const Metric = require("../models/metricModel");
+const sequelize = require("./db");
 const { BrowserWindow, ipcMain, dialog } = require("electron");
 const Customer = require("../models/customerModel");
 const Item = require("../models/itemModel");
@@ -36,15 +37,28 @@ ipcMain.on("sale-window-loaded", async (event) => {
   }
 });
 
-ipcMain.on('place-sale', async (event, data) => {
+ipcMain.on('place-sale', async (event, query) => {
+  const t = await sequelize.transaction();
   try{
-    const allItems = data.allItems, saleData = data.sale;
-    const sale = await Sale.create(saleData);
+    const allItems = query.allItems, saleData = query.sale;
+    const {customerId} = saleData;
+    const sale = await Sale.create(saleData, {transaction: t});
     const saleId = sale.dataValues.id;
     allItems.forEach(item => item.saleId = saleId);
-    await SaleItemJunction.bulkCreate(allItems);
+    await SaleItemJunction.bulkCreate(allItems, {transaction: t});
+    const customer = await Customer.findOne({
+      where: { id: customerId },
+      transaction: t
+    });
+    const data = {
+      totalDeal:
+        customer.dataValues.totalDeal + parseInt(saleData.total),
+    };
+    await Customer.update(data, { where: { id: customerId }, transaction: t});
+    t.commit();
     event.sender.send('sale-placed');
   }catch(err){
+    t.rollback();
     dialog.showErrorBox("An error message", err.message);
   }
 })

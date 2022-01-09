@@ -127,8 +127,8 @@ ipcMain.on("mark-as-settled", async (event, { orderId, newValue }) => {
 });
 
 ipcMain.on("update-order", async (event, { allItems, order, orderId }) => {
+  const t = await sequelize.transaction();
   try {
-    const t = await sequelize.transaction();
     const supplierId = order.supplierId;
     const currentPrice = await Order.findOne({ where: { id: orderId }, transaction: t });
     const supplierData = await Supplier.findOne({ where: { id: supplierId }, transaction: t });
