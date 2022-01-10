@@ -15,7 +15,14 @@ const addMetric = () => {
 };
 
 ipcRenderer.on("added-metric", (event) => {
-  ipcRenderer.send("show-message", { heading: 'Metric added', message: 'New metric has been added' });
+  document.querySelector("#add-metric-button").disabled = false;
+  ipcRenderer.send("show-message", {
+    heading: "Metric added",
+    message: "New metric has been added",
+  });
+  document.querySelector("#add-metric-name").value = '';
+  document.querySelector("#add-metric-desc").value = '';
+  ipcRenderer.send("metric-window-loaded");
 });
 
 ipcRenderer.on("metric-list-fetched", (event, metrics) => {
@@ -33,5 +40,9 @@ document.addEventListener("DOMContentLoaded", () => {
   ipcRenderer.send("metric-window-loaded");
   document
     .querySelector("#add-metric-button")
-    .addEventListener("click", addMetric);
+    .addEventListener("click", (e) => {
+      e.preventDefault();
+      e.target.disabled = true;
+      addMetric();
+    });
 });

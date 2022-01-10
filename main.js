@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require("electron");
 const sequelize = require("./database/db.js");
+require('./database/myCompanyController');
 require('./database/orderController')
 require('./database/supplierController')
 require('./database/metricController')
@@ -11,7 +12,6 @@ require('./database/customerSpecificController');
 require('./database/customerController');
 require('./database/saleController');
 require('./database/saleSpecificController');
-require('./database/myCompanyController');
 require('./utilities')
 sequelize
   .sync()

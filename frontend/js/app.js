@@ -75,6 +75,7 @@ document.querySelector('#update-details').addEventListener('click', (e) => {
     if(error === 0){
         ipcRenderer.send('save-company-details', {companyName, GSTIN, address, city, state, phoneNumber1, phoneNumber2});
     }
+    e.target.disabled = true;
 })
 
 document.addEventListener("DOMContentLoaded", () => {

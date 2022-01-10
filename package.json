@@ -28,7 +28,7 @@
   },
   "build": {
     "appId": "com.srajan.app",
-    "productName": "Sample app",
+    "productName": "Jai Shree Traders",
     "target": "NSIS",
     "extraResources": [
       "databaseFolder"
