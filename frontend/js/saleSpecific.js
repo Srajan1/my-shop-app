@@ -1,15 +1,14 @@
 const electron = require("electron");
 const ipcRenderer = electron.ipcRenderer;
 const saleId = sessionStorage.getItem("saleId");
+const myCompany = JSON.parse(sessionStorage.getItem('myCompany'));
 const generateInvoice = require("../partials/invoiceGenerator");
-
+console.log(myCompany.name);
 var fetchedData;
 var items = [],
   sellingPrice;
 var products = [];
 var customerData = {};
-var GSTIN = "09AOXPG4283N1ZZ",
-  myCompanyName = "Jaishree Traders";
 
 const makePaidZero = () => {
   document.querySelector("#total-sale-value").value = null;
@@ -22,24 +21,83 @@ function convert(str) {
   return [date.getFullYear(), mnth, day].join("-");
 }
 
-document.querySelector("#generate-invoice").addEventListener("click", () => {
+ipcRenderer.on('pakka-sold-items-fetched', (event, itemList) => {
   const data = {};
   const date = new Date();
-
-  // data.images = {
-  //   logo: "./companyLogo.png",
-  // };
   data.sender = {
-    company: myCompanyName,
-    address: "532 Alam Nagar",
-    zip: "261001",
-    city: "Sitapur",
-    country: "India",
-    custom1: `GSTIN: ${GSTIN}`,
+    company: myCompany.companyName,
+    address: myCompany.address,
+    city: myCompany.city,
+    state: myCompany.state,
+    zip: 261001,
+    custom1: `Phone ${myCompany.phoneNumber1}`,
+    custom3: `GSTIN ${myCompany.GSTIN}`
   };
+  if(myCompany.phoneNumber2){
+    data.sender.custom2 = `Phone ${myCompany.phoneNumber2}`
+  }
   data.client = {
     company: `${customerData.name}`,
     address: `${customerData.address}`,
+    zip: customerData.pinCode,
+    city: customerData.city,
+    custom1: `GSTIN ${customerData.gst}`
+  };
+  data.information = {
+    number: fetchedData.sale.id.toString()+ '_' + date.toLocaleString().split(',')[0].toString(),
+    date: `${fetchedData.sale.salePlacedDate.toLocaleString().split(',')[0]}`,
+    "due-date": fetchedData.sale.saleExpectedDate.toLocaleString().split(',')[0],
+  };
+  data.products = itemList;
+  data.settings = {
+    "currency": "INR",
+    "tax-notation": "gst"
+  };
+
+  var name = fetchedData.sale.id.toString()+ '_' + date.toLocaleString().toString() + '.pdf';
+  generateInvoice(data, name);
+})
+
+document.querySelector('#show-invoice-form').addEventListener('click', () => {
+  if(document.querySelector('#invoice-data').style.display === 'none')
+  document.querySelector('#invoice-data').style.display = 'block';
+  else document.querySelector('#invoice-data').style.display = 'none'
+})
+
+document.querySelector('#generate-pakka-invoice').addEventListener('click', (e) => {
+  e.preventDefault();
+  const gstValue = document.querySelector('#gst-percent').value;
+  if(!gstValue)
+  ipcRenderer.send("error-occured", {
+    heading: "GST Value not found",
+    message: "Please enter GST Value",
+  });
+  else{
+    ipcRenderer.send('fetch-pakka-sold-item-data', ({saleId, gstValue}))
+  }
+  
+
+})
+
+document.querySelector("#print-kachcha-invoice").addEventListener("click", (e) => {
+  e.preventDefault();
+  const data = {};
+  const date = new Date();
+  data.sender = {
+    company: myCompany.companyName,
+    address: myCompany.address,
+    city: myCompany.city,
+    state: myCompany.state,
+    zip: 261001,
+    custom1: `Phone ${myCompany.phoneNumber1}`,
+  };
+  
+  
+  data.client = {
+    company: `${customerData.name}`,
+    address: `${customerData.address}`,
+    zip: customerData.pinCode,
+    city: customerData.city,
   };
   data.information = {
     number: fetchedData.sale.id.toString()+ '_' + date.toLocaleString().split(',')[0].toString(),
@@ -51,6 +109,7 @@ document.querySelector("#generate-invoice").addEventListener("click", () => {
     "currency": "INR",
     "tax-notation": "gst"
   };
+
   var name = fetchedData.sale.id.toString()+ '_' + date.toLocaleString().toString() + '.pdf';
   generateInvoice(data, name);
 });
@@ -105,9 +164,9 @@ ipcRenderer.on("sale-specific-data", (event, data) => {
   if (fetchedData.sale.settled === 1) {
     document.querySelector("#update-the-sale").disabled = true;
     document.querySelectorAll("input").readOnly = true;
-    document.querySelector("#generate-invoice").classList.remove("grey-text");
-    document.querySelector("#generate-invoice").setAttribute("href", "#");
-    document.querySelector("#generate-invoice").classList.add("amber-text");
+    document.querySelector("#show-invoice-form").classList.remove("grey-text");
+    document.querySelector("#show-invoice-form").setAttribute("href", "#");
+    document.querySelector("#show-invoice-form").classList.add("amber-text");
   }
   ipcRenderer.send("fetch-customer-data-for-sale", fetchedData.sale.customerId);
   ipcRenderer.on(

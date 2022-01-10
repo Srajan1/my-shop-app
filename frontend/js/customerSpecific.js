@@ -47,6 +47,7 @@ document.querySelector("#update-details").addEventListener("click", () => {
   const customerCity = document.querySelector("#customer-city").value;
   const customerPinCode = document.querySelector("#customer-pin-code").value;
   const customerState = document.querySelector("#customer-state").value;
+  const customerGST = document.querySelector("#customer-gst").value;
   const customerDescription = document.querySelector(
     "#customer-description"
   ).value;
@@ -57,6 +58,7 @@ document.querySelector("#update-details").addEventListener("click", () => {
   if (customerCity !== "") customer.city = customerCity;
   if (customerPinCode !== "") customer.pinCode = customerPinCode;
   if (customerState !== "") customer.state = customerState;
+  if (customerGST !== "") customer.gst = customerGST;
   if (customerDescription !== "") customer.description = customerDescription;
   ipcRenderer.send("update-customer", { customer, customerId });
 });
@@ -71,6 +73,7 @@ ipcRenderer.on("customer-data-fetched", (event, data) => {
   document.querySelector("#customer-city").value = fetchedData.city;
   document.querySelector("#customer-state").value = fetchedData.state;
   document.querySelector("#customer-pin-code").value = fetchedData.pinCode;
+  document.querySelector("#customer-gst").value = fetchedData.gst;
   document.querySelector("#customer-description").value =
     fetchedData.description;
   ipcRenderer.send("fetch-sale-for-customer", {
@@ -111,8 +114,8 @@ ipcRenderer.on("sale-fetched-for-customer", (event, { saleArray, count }) => {
 
 ipcRenderer.on("customer-updated", () => {
   ipcRenderer.send("show-message", {
-    heading: "Supplier updated",
-    message: "Supplier details have been updated",
+    heading: "Customer updated",
+    message: "Customer details have been updated",
   });
   ipcRenderer.send("customer-specific-window-loaded", customerId);
   document.querySelector("#update-customer-form-toggle").click();

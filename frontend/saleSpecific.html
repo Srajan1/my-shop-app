@@ -8,7 +8,7 @@
       <h3 style="padding: 15px 20px" id="page-heading"></h3>
       <div class="card-action">
         <div class="row">
-          <a id="generate-invoice"  class="grey-text">Generate invoice</a>
+          <a id="show-invoice-form"  class="grey-text">Generate invoice</a>
           <span>Only a settled sale's invoice can be generated</span>
         </div>
         <div class="row">
@@ -17,6 +17,11 @@
         </div>
       </div>
     </div>
+    <form id="invoice-data" style="display: none;">
+        <input type="number" id="gst-percent" placeholder="Enter GST percent">
+        <button class="btn" id="generate-pakka-invoice">Print pakka invoice</button>      
+        <button class="btn" id="print-kachcha-invoice">Print kachcha invoice</button>
+    </form>
     <form id="update-sale">
       <div class="col l4">
         <label for="customer-dropdown">Select customer</label>

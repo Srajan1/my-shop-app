@@ -12,6 +12,8 @@ ipcMain.on("customer-window-loaded", async function (event, query) {
   if (query.name != null) where.name = { [Op.like]: "%" + query.name + "%" };
   if (query.address != null)
     where.address = { [Op.like]: "%" + query.address + "%" };
+    if (query.gst != null)
+    where.gst = { [Op.like]: "%" + query.gst + "%" };
   if (query.phone != null)
     where.phoneNumber = { [Op.like]: "%" + query.phone + "%" };
     if (query.city != null)

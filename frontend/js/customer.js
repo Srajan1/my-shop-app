@@ -33,6 +33,7 @@ const saveCustomer = async function (e) {
   const customerCity = document.querySelector("#customer-city").value;
   const customerPinCode = document.querySelector("#customer-pin-code").value;
   const customerState = document.querySelector("#customer-state").value;
+  const customerGST = document.querySelector('#customer-gst').value;
   const customerDescription = document.querySelector(
     "#customer-description"
   ).value;
@@ -43,6 +44,7 @@ const saveCustomer = async function (e) {
   if (customerCity !== "") customer.city = customerCity;
   if (customerPinCode !== "") customer.pinCode = customerPinCode;
   if (customerState !== "") customer.state = customerState;
+  if (customerGST !== "") customer.gst = customerGST;
   if (customerDescription !== "") customer.description = customerDescription;
     console.log(customer);
   ipcRenderer.send("add-customer", customer);
@@ -73,17 +75,20 @@ document
     const filterCity = document.querySelector("#filter-city").value;
     const filterPinCode = document.querySelector("#filter-pin-code").value;
     const filterState = document.querySelector("#filter-state").value;
+    const filterGST = document.querySelector("#filter-gst").value;
     if (filterName) where.name = filterName;
     if (filterPhone) where.phone = filterPhone;
     if (filterAddress) where.address = filterAddress;
     if (filterCity) where.city = filterCity;
     if (filterPinCode) where.pinCode = filterPinCode;
     if (filterState) where.state = filterState;
+    if (filterGST) where.gst = filterGST;
     document.querySelector("#filter-name").value = "";
     document.querySelector("#filter-phone").value = "";
     document.querySelector("#filter-address").value = "";
     document.querySelector("#filter-city").value = "";
     document.querySelector("#filter-state").value = "";
+    document.querySelector("#filter-gst").value = "";
     document.querySelector("#filter-pin-code").value = "";
     ipcRenderer.send("customer-window-loaded", { pageNumber, where, limit });
   });
@@ -133,7 +138,8 @@ ipcRenderer.on("fetched-customers", (event, customersInfo) => {
     var row = document.createElement("tr");
     row.innerHTML = `<tr><td>${customer.name}</td>
     <td>${customer.phoneNumber}</td>
-    <td>${customer.address}</td>
+    <td>${customer.gst}</td>
+    <td>${customer.address + ' ' +customer.city + ' ' +customer.pinCode + ' ' +customer.state }</td>
     <td><a href="customerSpecific.html" class="transparent btn manage-button"  id="${customer.id}">📝</a></td></tr>`;
     tableBody.appendChild(row);
   });

@@ -26,6 +26,12 @@ const MyCompany = sequelize.define(
     address: {
       type: DataTypes.STRING,
     },
+    city: {
+      type: DataTypes.STRING,
+    },
+    state: {
+      type: DataTypes.STRING,
+    },
   },
   {
     sequelize,
