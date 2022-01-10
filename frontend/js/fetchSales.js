@@ -16,6 +16,22 @@ const manageFunction = () => {
   }
 };
 
+document.querySelector('#invoice-search').addEventListener('click', (e) => {
+  e.preventDefault();
+  const number = document.querySelector('#invoice-number').value;
+  if(!number)
+  ipcRenderer.send("error-occured", {
+    heading: "Invoice number found",
+    message: "Please enter invoice number",
+  });
+  else{
+    const num = number.split("_");
+    where = {id: num[0]};
+    ipcRenderer.send("fetch-all-sales", { where, limit, pageNumber });
+    where = {};
+  }
+})
+
 document.querySelector('#settled-sale-view').addEventListener('click', (e) => {
   e.preventDefault();
   if(e.target.innerText === 'SHOW ONLY PENDING SALES'){

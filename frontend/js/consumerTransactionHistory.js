@@ -58,7 +58,7 @@ ipcRenderer.on("customer-transaction-loaded", (event, data) => {
   console.log(fetchedData);
   document.querySelector(
     "#page-heading"
-  ).innerText = `${fetchedData.customer.name} has sold to you total ₹${fetchedData.customer.totalDeal}`;
+  ).innerText = `${fetchedData.customer.name} has bought from you total ₹${fetchedData.customer.totalDeal}`;
   const tableBody = document.querySelector("#table-body");
   tableBody.innerHTML = "";
   fetchedData.transactions.forEach((transaction) => {
@@ -70,7 +70,7 @@ ipcRenderer.on("customer-transaction-loaded", (event, data) => {
       totalPaid+=transaction.paid;
     tableBody.appendChild(row);
   });
-  document.querySelector('#paid-total').innerText = `You have paid total ₹${totalPaid}`;
+  document.querySelector('#paid-total').innerText = `You have been paid total ₹${totalPaid}`;
 });
 
 document.addEventListener("DOMContentLoaded", () => {
