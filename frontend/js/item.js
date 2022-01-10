@@ -29,6 +29,12 @@ ipcRenderer.on("item-metric-list-fetched", (event, data) => {
   else document.querySelector("#next-button").style.pointerEvents = "auto";
   const dropdown = document.querySelector("#item-metric-dropdown");
   dropdown.innerHTML = "";
+  const disabledDrp = document.createElement("option");
+  disabledDrp.disabled = "true";
+  disabledDrp.setAttribute("selected", true);
+  disabledDrp.value = 'Choose a metric'
+  disabledDrp.innerHTML = "Choose a metric";
+  dropdown.appendChild(disabledDrp);
   metrics.forEach((metric) => {
     var optn = document.createElement("option");
     optn.setAttribute("value", metric.id);
@@ -105,6 +111,12 @@ addItemButton.addEventListener("click", (e) => {
     hsn: itemHsn,
     available: itemAvailable,
   };
+  if(!itemMetricId || itemMetricId === 'Choose a metric')
+  ipcRenderer.send("error-occured", {
+    heading: "Metric not found",
+    message: "Please select a metric, if no metric exists, then add a metric",
+  });
+  else
   ipcRenderer.send("add-item", item);
 });
 
