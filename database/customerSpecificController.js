@@ -4,6 +4,7 @@ const sequelize = require("./db");
 const { Op } = require("sequelize");
 const Sale = require("../models/saleModel");
 const CustomerTransaction = require('../models/customerTransactionModel')
+const SaleItemJunction = require('../models/saleItemJunction');
 
 ipcMain.on("customer-specific-window-loaded", async (event, customerId) => {
   try {
@@ -59,3 +60,28 @@ ipcMain.on('add-customer-history', async(event, data) => {
     dialog.showErrorBox("An error message", err.message);
   }
 })
+
+ipcMain.on("delete-customer", async (event, customerId) => {
+  const t = await sequelize.transaction();
+  try {
+    await Sale.destroy({ where: { customerId }, transaction: t });
+    await SaleItemJunction.destroy({
+      where: {
+        saleId: {
+          [Op.eq]: null,
+        },
+      },
+      transaction: t,
+    });
+    await CustomerTransaction.destroy({
+      where: { customerId },
+      transaction: t,
+    });
+    await Customer.destroy({ where: { id: customerId }, transaction: t });
+    event.sender.send("customer-deleted");
+    t.commit();
+  } catch (err) {
+    t.rollback();
+    dialog.showErrorBox("An error message", err.message);
+  }
+});

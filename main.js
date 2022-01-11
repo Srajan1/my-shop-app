@@ -12,6 +12,7 @@ require('./database/customerSpecificController');
 require('./database/customerController');
 require('./database/saleController');
 require('./database/saleSpecificController');
+require('./database/passwodController')
 require('./utilities')
 sequelize
   .sync()
@@ -27,7 +28,7 @@ app.on("ready", () => {
     show: false,
     webPreferences: { nodeIntegration: true, contextIsolation: false },
   });
-  win.loadFile('./frontend/index.html')
+  win.loadFile('./frontend/passwordProtection.html')
   win.maximize();
   win.on('ready-to-show', ()=>{
     win.show();

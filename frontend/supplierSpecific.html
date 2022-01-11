@@ -1,20 +1,35 @@
 <div id="header"></div>
 <div id="content" class="row">
-
   <div class="col l10">
     <div class="card">
       <h3 style="padding: 20px 0 0 15px" id="page-heading">Suppliers</h3>
-      <span  style="padding: 0 0 20px 15" id="deal-details"></span>
+      <span style="padding: 0 0 20px 15" id="deal-details"></span>
       <div class="card-action">
         <a href="#" class="blue-text" id="update-supplier-form-toggle"
           >Update supplier details</a
         >
-        <a href="./supplierTransactionHistory.html" class="blue-text" id="transaction-history-form-toggle"
+        <a
+          href="./supplierTransactionHistory.html"
+          class="blue-text"
+          id="transaction-history-form-toggle"
           >View transaction history</a
+        >
+        <a
+          href="#"
+          class="red-text"
+          id="delete-form-toggle"
+          >Delete this supplier</a
         >
       </div>
     </div>
-    <form id="updation-form" style="display: none;">
+    
+      <div id="confirm-deletion" class="row center" style="display: none;">
+        <h6>Are you sure you want to delete this? It will delete all the orders and transactions for this supplier.</h6>
+        <button href="#" id="delete" class="red btn">Yes</button>
+        <button href="#" id="no-delete" class="blue btn">No</button>
+      </div>
+    
+    <form id="updation-form" style="display: none">
       <input
         type="text"
         id="supplier-name"
@@ -30,11 +45,7 @@
         id="supplier-address"
         placeholder="Enter supplier address"
       />
-      <input
-        type="text"
-        id="supplier-city"
-        placeholder="Enter supplier city"
-      />
+      <input type="text" id="supplier-city" placeholder="Enter supplier city" />
       <input
         type="text"
         id="supplier-pin-code"
@@ -44,6 +55,11 @@
         type="text"
         id="supplier-state"
         placeholder="Enter supplier state"
+      />
+      <input
+        type="number"
+        id="supplier-previous-balance"
+        placeholder="Enter previous balance of supplier"
       />
       <input
         type="text"
@@ -67,7 +83,7 @@
         <a id="prev-button" href="#!"><i class="material-icons"><</i></a>
       </li>
       <li class="active"><a href="#!" id="current-page">page number</a></li>
-      <li >
+      <li>
         <a id="next-button" href="#!"><i class="material-icons">></i></a>
       </li>
     </ul>

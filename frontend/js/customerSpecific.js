@@ -22,6 +22,24 @@ const manageFunction = () => {
   }
 };
 
+document.querySelector('#delete-form-toggle').addEventListener('click', () => {
+  if(document.querySelector('#confirm-deletion').style.display == 'none')
+  document.querySelector('#confirm-deletion').style.display = 'block';
+  else document.querySelector('#confirm-deletion').style.display = 'none';
+})
+
+document.querySelector('#delete').addEventListener('click', (e) => {
+  e.preventDefault();
+  ipcRenderer.send('delete-customer', (customerId));
+})
+document.querySelector('#no-delete').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.querySelector('#delete-form-toggle').click();
+})
+ipcRenderer.on('customer-deleted', () => {
+  window.location.href = './customer.html'
+})
+
 document.querySelector("#prev-button").addEventListener("click", () => {
   --pageNumber;
   ipcRenderer.send("fetch-sale-for-customer", {
@@ -48,6 +66,7 @@ document.querySelector("#update-details").addEventListener("click", () => {
   const customerPinCode = document.querySelector("#customer-pin-code").value;
   const customerState = document.querySelector("#customer-state").value;
   const customerGST = document.querySelector("#customer-gst").value;
+  const customerBalance = document.querySelector('#customer-previous-balance').value;
   const customerDescription = document.querySelector(
     "#customer-description"
   ).value;
@@ -60,6 +79,7 @@ document.querySelector("#update-details").addEventListener("click", () => {
   if (customerState !== "") customer.state = customerState;
   if (customerGST !== "") customer.gst = customerGST;
   if (customerDescription !== "") customer.description = customerDescription;
+  if (customerBalance !== "") customer.totalDeal = customerBalance;
   ipcRenderer.send("update-customer", { customer, customerId });
 });
 
@@ -74,6 +94,7 @@ ipcRenderer.on("customer-data-fetched", (event, data) => {
   document.querySelector("#customer-state").value = fetchedData.state;
   document.querySelector("#customer-pin-code").value = fetchedData.pinCode;
   document.querySelector("#customer-gst").value = fetchedData.gst;
+  document.querySelector('#customer-previous-balance').value = fetchedData.totalDeal;
   document.querySelector("#customer-description").value =
     fetchedData.description;
   ipcRenderer.send("fetch-sale-for-customer", {

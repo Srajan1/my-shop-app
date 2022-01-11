@@ -8,4 +8,5 @@ document.querySelector("#navbar").innerHTML =
   '<div class="row" style="padding: 0 15px"><a class="white-text" style="display: block" href="./order.html">Orders</a></div>' +
   '<div class="row" style="padding: 0 15px"><a class="white-text" style="display: block" href="./customer.html">Customer</a></div>' +
   '<div class="row" style="padding: 0 15px"><a class="white-text" style="display: block" href="./sale.html">Sales</a></div>' +
+  '<div class="row" style="padding: 0 15px"><a class="white-text" style="display: block" href="./passwordProtection.html">Logout</a></div>' +
   "</div>";

@@ -47,6 +47,7 @@ document.querySelector("#update-details").addEventListener("click", () => {
   const supplierCity = document.querySelector("#supplier-city").value;
   const supplierPinCode = document.querySelector("#supplier-pin-code").value;
   const supplierState = document.querySelector("#supplier-state").value;
+  const supplierBalance = document.querySelector('#supplier-previous-balance').value;
   const supplierDescription = document.querySelector(
     "#supplier-description"
   ).value;
@@ -58,8 +59,27 @@ document.querySelector("#update-details").addEventListener("click", () => {
   if (supplierCity !== "") supplier.city = supplierCity;
   if (supplierPinCode !== "") supplier.pinCode = supplierPinCode;
   if (supplierState !== "") supplier.state = supplierState;
+  if (supplierBalance !== "") supplier.totalDeal = supplierBalance;
   ipcRenderer.send("update-supplier", { supplier, supplierId });
 });
+
+document.querySelector('#delete-form-toggle').addEventListener('click', () => {
+  if(document.querySelector('#confirm-deletion').style.display == 'none')
+  document.querySelector('#confirm-deletion').style.display = 'block';
+  else document.querySelector('#confirm-deletion').style.display = 'none';
+})
+
+document.querySelector('#delete').addEventListener('click', (e) => {
+  e.preventDefault();
+  ipcRenderer.send('delete-supplier', (supplierId));
+})
+document.querySelector('#no-delete').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.querySelector('#delete-form-toggle').click();
+})
+ipcRenderer.on('supplier-deleted', () => {
+  window.location.href = './supplier.html'
+})
 
 ipcRenderer.on("supplier-data-fetched", (event, data) => {
   fetchedData = data;
@@ -75,6 +95,7 @@ ipcRenderer.on("supplier-data-fetched", (event, data) => {
     document.querySelector("#supplier-city").value = fetchedData.city;
     document.querySelector("#supplier-pin-code").value = fetchedData.pinCode;;
     document.querySelector("#supplier-state").value = fetchedData.state;
+    document.querySelector('#supplier-previous-balance').value = fetchedData.totalDeal;
   ipcRenderer.send("fetch-order-for-supplier", {
     supplierId,
     limit,
