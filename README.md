@@ -25,3 +25,10 @@ The order's page can be updated and settled. Settling an order, will
 
 ## Customer Module.
 The role of customer is opposite to supplier, as the customers will buy the product. The module is similar to supplier, and instead of orders, customers will have sales.
+The customer module also has all the features which are present in supplier module. But since the customer is buying from us, we will also be providing them with invoicesm by using the following invoice button and entering the GST percentage, which varies from product to product.
+![Incoice generation](./imagesForReadme/invoiceGeneration.png)
+
+The invoice is generated in the form of a pdf and looks somewhat like this.
+![Invoice](./imagesForReadme/invoice.png)
+There is a unique identification number on the pdf, which can be later used to see which sale it corresponds to. As can be seen from the following image
+![Fetch sales using invoice number](./imagesForReadme/fetchSettledSales.png)
