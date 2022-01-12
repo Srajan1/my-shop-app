@@ -38,4 +38,4 @@ There is a unique identification number on the pdf, which can be later used to s
 2. Run "npm install" in the root folder to install all the required packages.
 3. Now run "npm run dist" which is a script that you will find in package.json file. It will create a folder named dist. Which will have the .exe file to run as a setup for your machine.
 
-Software is password protected, initial password is 123456, which you can change later on. Since the password is stored on your local machine the password is not excrypted.
+Software is password protected, initial password is 123456, which you can change later on. Since the password is stored on your local machine the password is not encrypted.
