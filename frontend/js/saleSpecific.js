@@ -28,7 +28,7 @@ ipcRenderer.on('pakka-sold-items-fetched', (event, itemList) => {
     company: myCompany.companyName,
     address: myCompany.address,
     city: myCompany.city,
-    state: myCompany.state,
+    country: myCompany.state,
     zip: 261001,
     custom1: `Phone ${myCompany.phoneNumber1}`,
     custom3: `GSTIN ${myCompany.GSTIN}`
@@ -41,13 +41,11 @@ ipcRenderer.on('pakka-sold-items-fetched', (event, itemList) => {
     address: `${customerData.address}`,
     zip: customerData.pinCode,
     city: customerData.city,
+    country: customerData.state,
     custom1: `GSTIN ${customerData.gst}`
   };
-  data.information = {
-    number: fetchedData.sale.id.toString()+ '_' + date.toLocaleString().split(',')[0].toString(),
-    date: `${fetchedData.sale.salePlacedDate.toLocaleString().split(',')[0]}`,
-    "due-date": fetchedData.sale.saleExpectedDate.toLocaleString().split(',')[0],
-  };
+  data.invoiceNumber = fetchedData.sale.id.toString()+ '_' + date.toLocaleString().split(',')[0].toString()
+  data.invoiceDate = fetchedData.sale.salePlacedDate.toLocaleString().split(',')[0]
   data.products = itemList;
   data.settings = {
     "currency": "INR",
@@ -87,23 +85,24 @@ document.querySelector("#print-kachcha-invoice").addEventListener("click", (e) =
     company: myCompany.companyName,
     address: myCompany.address,
     city: myCompany.city,
-    state: myCompany.state,
     zip: 261001,
+    country: `${myCompany.state}`,
     custom1: `Phone ${myCompany.phoneNumber1}`,
   };
-  
+  if(myCompany.phoneNumber2){
+    data.sender.custom2 = `Phone ${myCompany.phoneNumber2}`
+  }
   
   data.client = {
     company: `${customerData.name}`,
     address: `${customerData.address}`,
     zip: customerData.pinCode,
     city: customerData.city,
+    country: `${myCompany.state}`,
   };
-  data.information = {
-    number: fetchedData.sale.id.toString()+ '_' + date.toLocaleString().split(',')[0].toString(),
-    date: `${fetchedData.sale.salePlacedDate.toLocaleString().split(',')[0]}`,
-    "due-date": fetchedData.sale.saleExpectedDate.toLocaleString().split(',')[0],
-  };
+  data.invoiceNumber = fetchedData.sale.id.toString()+ '_' + date.toLocaleString().split(',')[0].toString()
+  data.invoiceDate = fetchedData.sale.salePlacedDate.toLocaleString().split(',')[0]
+  
   data.products = products;
   data.settings = {
     "currency": "INR",
@@ -136,9 +135,6 @@ const populateSaleData = (customerArray) => {
       "Marking a sale un-settled will add all the item quantities to your stock";
     document.querySelector("#settle-sale").classList.add("red-text");
   }
-  document.querySelector("#expected-date-input").value = convert(
-    fetchedData.sale.saleExpectedDate
-  );
   document.querySelector("#placed-date-input").value = convert(
     fetchedData.sale.salePlacedDate
   );
@@ -364,12 +360,10 @@ document.querySelector("#update-the-sale").addEventListener("click", (e) => {
 
 const sendData = () => {
   const total = document.querySelector("#total-sale-value").value;
-  const saleExpectedDate = document.querySelector("#expected-date-input").value;
   const salePlacedDate = document.querySelector("#placed-date-input").value;
   const customerId = document.querySelector("#customer-dropdown").value;
   const sale = {
     total,
-    saleExpectedDate,
     salePlacedDate,
     customerId,
   };

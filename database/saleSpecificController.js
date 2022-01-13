@@ -54,7 +54,7 @@ ipcMain.on('fetch-sold-item-data', async(event, saleId) => {
       const description = data.dataValues.Item.dataValues.name
       const quantity = data.dataValues.quantity;
       const price = (data.dataValues.price/data.dataValues.quantity); 
-      products.push({description: description, quantity, price, 'tax-rate': 0});
+      products.push({description: description, quantity, price, 'tax': 0});
     })
     event.sender.send('sold-items-fetched', products);
   }catch(err){
@@ -71,10 +71,10 @@ ipcMain.on('fetch-pakka-sold-item-data', async(event, query) => {
       if(!data.dataValues.Item.dataValues.hsn){
         throw {message: `HSN Value not available for  ${data.dataValues.Item.dataValues.name}`};
       }
-      const description = `${data.dataValues.Item.dataValues.name} + HSN: ${data.dataValues.Item.dataValues.hsn}`
+      const description = `${data.dataValues.Item.dataValues.name} HSN: ${data.dataValues.Item.dataValues.hsn}`
       const quantity = data.dataValues.quantity;
       const price = (data.dataValues.price/data.dataValues.quantity); 
-      products.push({description: description, quantity, price, 'tax-rate': parseInt(gstValue)});
+      products.push({description: description, quantity, price, 'tax': parseInt(gstValue)});
     })
     event.sender.send('pakka-sold-items-fetched', products);
   }catch(err){

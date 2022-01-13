@@ -70,7 +70,6 @@ ipcRenderer.on("sales-fetched", (event, data) => {
       <td>${sale.total}</td>
       <td>${sale.settled == 0 ? "Not settled" : "Settled"}</td>
       <td>${sale.salePlacedDate.toDateString()}</td>
-      <td>${sale.saleExpectedDate.toDateString()}</td>
       <td><a href="saleSpecific.html" class="transparent btn manage-button" id="${
         sale.id
       }"><abbr title="View">📝</abbr></a></td></tr>`;

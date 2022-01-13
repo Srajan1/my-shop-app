@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@electron/remote": "^2.0.1",
-    "easyinvoice": "^2.2.4",
+    "easyinvoice": "^1.0.142",
     "electron-dl": "^3.3.0",
     "moment": "^2.29.1",
     "sequelize": "^6.12.0-beta.1",
@@ -28,7 +28,7 @@
   },
   "build": {
     "appId": "com.srajan.app",
-    "productName": "My Shop",
+    "productName": "Jai Shree Traders",
     "target": "NSIS",
     "extraResources": [
       "databaseFolder"

@@ -204,12 +204,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const sendData = () => {
   const total = document.querySelector("#total-sale-value").value;
-  const saleExpectedDate = document.querySelector("#expected-date-input").value;
   const salePlacedDate = document.querySelector("#placed-date-input").value;
   const customerId =  document.querySelector('#customer-dropdown').value;
   const sale = {
     total, 
-    saleExpectedDate, 
     salePlacedDate,
     customerId
   };
