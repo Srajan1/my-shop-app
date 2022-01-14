@@ -27,6 +27,22 @@ ipcRenderer.on("item-metric-list-fetched", (event, data) => {
   document.querySelector("#item-metric-dropdown").value = metric.id;
 });
 
+document.querySelector('#delete-form-toggle').addEventListener('click', () => {
+  if(document.querySelector('#confirm-deletion').style.display == 'none')
+  document.querySelector('#confirm-deletion').style.display = 'block';
+  else document.querySelector('#confirm-deletion').style.display = 'none';
+})
+document.querySelector('#delete').addEventListener('click', (e) => {
+  e.preventDefault();
+  ipcRenderer.send('delete-item', (itemId));
+})
+document.querySelector('#no-delete').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.querySelector('#delete-form-toggle').click();
+})
+ipcRenderer.on('item-deleted', () => {
+  window.location.href = './item.html';
+})
 ipcRenderer.on("prices-fetched", (event, data) => {
   const costPrices = data.costPrices;
   const sellingPrices = data.sellingPrices;

@@ -5,6 +5,8 @@ const CostPrice = require("../models/costPriceModel");
 const SellingPrice = require("../models/sellingPriceModel");
 const sequelize = require("./db");
 const { Op } = require("sequelize");
+const SaleItemJunction = require("../models/saleItemJunction");
+const OrderItemJunction = require("../models/orderItemJunction");
 
 ipcMain.on("item-specific-window-loaded", async (event, itemId) => {
   try {
@@ -97,3 +99,25 @@ ipcMain.on("update-item", async (event, data) => {
     dialog.showErrorBox("An error message", err.message);
   }
 });
+
+ipcMain.on('delete-item', async(event, itemId) => {
+  const t = await sequelize.transaction();
+  try{
+    const sales = await SaleItemJunction.findAll({where: {itemId}, transaction: t});
+    const orders = await OrderItemJunction.findAll({where: {itemId}, transaction: t});
+    if(sales.length){
+      dialog.showErrorBox("Cannot delete item", 'Item is listed in sales, please remove all sales of this item to delete this item.');
+    }else if(orders.length){
+      dialog.showErrorBox("Cannot delete item", 'Item is listed in orders, please remove all orders of this item to delete this item.');
+    }else{
+      await SellingPrice.destroy({where: {itemId}, transaction: t});
+      await CostPrice.destroy({where: {itemId}, transaction: t});
+      await Item.destroy({where: {id: itemId}, transaction: t});
+    }
+    t.commit();
+    event.sender.send('item-deleted');
+  }catch(err){
+    t.rollback();
+    dialog.showErrorBox("An error message", err.message);
+  }
+})

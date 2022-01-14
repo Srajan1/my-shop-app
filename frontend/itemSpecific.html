@@ -3,8 +3,21 @@
   
 
   <div class="col l10">
-    <div style="padding: 15px 20px" class="card">
-      <h3 id="heading"></h3>
+    <div class="card">
+      <h3 style="padding: 20px 0 0 15px" id="heading"></h3>
+      <div class="card-action">
+        <a
+          href="#"
+          class="red-text"
+          id="delete-form-toggle"
+          >Delete this item</a
+        >
+      </div>
+    </div>
+    <div id="confirm-deletion" class="row center" style="display: none;">
+      <h6>Are you sure you want to delete this? It will delete all the orders and sales for this item.</h6>
+      <button href="#" id="delete" class="red btn">Yes</button>
+      <button href="#" id="no-delete" class="blue btn">No</button>
     </div>
     <form class="row" id="update-item-form">
       <div class="col l3">

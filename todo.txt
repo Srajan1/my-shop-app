@@ -1,1 +1,2 @@
 Add delete buttons
+Should item be deleted if present only in settled sales?

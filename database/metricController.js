@@ -23,7 +23,7 @@ ipcMain.on('delete-metric', async(event, {metricId}) => {
       event.sender.send('metric-deleted')
     }
   }catch(err){
-
+    dialog.showErrorBox("An error message", err.message);
   }
 })
 

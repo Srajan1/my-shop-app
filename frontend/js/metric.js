@@ -69,10 +69,10 @@ ipcRenderer.on("metric-list-fetched", (event, metrics) => {
     row.innerHTML = `<tr><td>${metric.name}</td>
       <td>${metric.description}</td>
       <td>
-        <a href="#" class="manage-button red-text" id="${metric.id}"><abbr title="View">Delete❌</abbr></a>
+        <a href="#" class="manage-button red-text" id="${metric.id}"><abbr title="View">Delete this metric❌</abbr></a>
         <div style="display:none" class="${metric.id}_confirm confirmation_pop">
-          <a href="#" class="confirmation-popup confirm-button"><abbr title="View">confirm?</abbr></a>
-          <a href="#" class="confirmation-popup cancel-button"><abbr title="View">cancel?</abbr></a>
+          <a href="#" class="red-text confirmation-popup confirm-button"><abbr title="View">confirm?</abbr></a>
+          <a href="#" class="green-text confirmation-popup cancel-button"><abbr title="View">cancel?</abbr></a>
         </div>
       </td>
       </tr>`;
