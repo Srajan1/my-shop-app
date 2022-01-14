@@ -1,0 +1,32 @@
+<div id="header"></div>
+<div id="content" class="row">
+  
+
+  <div class="col l10">
+    <div style="padding: 15px 20px" class="card">
+      <h3 id="page-heading">Sales</h3>
+    </div>
+    <table class="striped">
+      <thead>
+        <thead>
+            <th>Customer</th>
+            <th>Total</th>
+            <th>Settled</th>
+            <th>Sale placed</th>
+            <th>Manage</th>
+          </thead>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+  <div id="navbar"></div>
+</div>
+
+<div id="footer"></div>
+
+<script>
+  require("./partials/header.js");
+  require("./partials/navbar.js");
+  require("./partials/footer.js");
+  require('./js/itemSales.js')
+</script>

@@ -56,10 +56,33 @@ ipcRenderer.on('pakka-sold-items-fetched', (event, itemList) => {
   generateInvoice(data, name);
 })
 
-document.querySelector('#show-invoice-form').addEventListener('click', () => {
+document.querySelector('#show-invoice-form').addEventListener('click', (e) => {
+  const href = e.target.getAttribute('href');
+  if(!href)
+  return;
   if(document.querySelector('#invoice-data').style.display === 'none')
   document.querySelector('#invoice-data').style.display = 'block';
   else document.querySelector('#invoice-data').style.display = 'none'
+})
+
+document.querySelector('#delete-form-toggle').addEventListener('click', (e) => {
+  const href = e.target.getAttribute('href');
+  if(!href)
+  return;
+  if(document.querySelector('#confirm-deletion').style.display == 'none')
+  document.querySelector('#confirm-deletion').style.display = 'block';
+  else document.querySelector('#confirm-deletion').style.display = 'none';
+})
+document.querySelector('#delete').addEventListener('click', (e) => {
+  e.preventDefault();
+  ipcRenderer.send('delete-sale', ({saleId, totalDeal: fetchedData.sale.total, customerId: fetchedData.sale.customerId}));
+})
+document.querySelector('#no-delete').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.querySelector('#delete-form-toggle').click();
+})
+ipcRenderer.on('sale-deleted', () => {
+  window.location.href = './sale.html';
 })
 
 document.querySelector('#generate-pakka-invoice').addEventListener('click', (e) => {
@@ -158,11 +181,18 @@ ipcRenderer.on("sale-specific-data", (event, data) => {
   fetchedData = data;
 
   if (fetchedData.sale.settled === 1) {
+    
+    document.querySelector('#delete-form-toggle').classList.add('grey-text');
+    document.querySelector('#delete-inst').innerText = 'Only unsettled orders can be deleted';
     document.querySelector("#update-the-sale").disabled = true;
     document.querySelectorAll("input").readOnly = true;
     document.querySelector("#show-invoice-form").classList.remove("grey-text");
     document.querySelector("#show-invoice-form").setAttribute("href", "#");
     document.querySelector("#show-invoice-form").classList.add("amber-text");
+  }else{
+    document.querySelector('#delete-form-toggle').setAttribute('href', '#');
+    document.querySelector('#delete-form-toggle').classList.add('red-text');
+    document.querySelector('#delete-inst').innerText = 'It will remove all details related to this order.';
   }
   ipcRenderer.send("fetch-customer-data-for-sale", fetchedData.sale.customerId);
   ipcRenderer.on(

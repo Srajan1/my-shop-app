@@ -193,3 +193,29 @@ ipcMain.on("update-sale", async (event, { allItems, sale, saleId }) => {
     dialog.showErrorBox("An error message", err.message);
   }
 });
+
+
+ipcMain.on('delete-sale', async(event, data) => {
+  const t = await sequelize.transaction();
+  try{
+    const {saleId, totalDeal, customerId} = data;
+    
+    await SaleItemJunction.destroy({where: {saleId}, transaction: t});
+    
+    await Sale.destroy({where: {id: saleId}, transaction: t});
+    
+    const customer = await Customer.findOne({where: {id: customerId}, transaction: t});
+    const updateData = {
+      totalDeal: customer.dataValues.totalDeal-totalDeal
+    };
+    await Customer.update(updateData, {where: {id: customerId}, transaction: t});
+    
+    t.commit();
+    
+    event.sender.send('sale-deleted');
+  }catch(err){
+    
+    t.rollback();
+    dialog.showErrorBox("An error message", err.message);
+  }
+})

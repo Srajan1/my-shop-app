@@ -7,6 +7,8 @@ const sequelize = require("./db");
 const { Op } = require("sequelize");
 const SaleItemJunction = require("../models/saleItemJunction");
 const OrderItemJunction = require("../models/orderItemJunction");
+const Sale = require("../models/saleModel");
+const Customer = require("../models/customerModel");
 
 ipcMain.on("item-specific-window-loaded", async (event, itemId) => {
   try {
@@ -35,16 +37,20 @@ ipcMain.on("item-specific-window-loaded", async (event, itemId) => {
 
 ipcMain.on("save-selling-price", async (event, recievedData) => {
   try {
-    const itemId = recievedData.itemId, data = recievedData.sellingPrice;
+    const itemId = recievedData.itemId,
+      data = recievedData.sellingPrice;
     const previousInstance = await SellingPrice.findOne({
       where: {
         itemId,
-        current: 1
-    }
+        current: 1,
+      },
     });
     data.current = 1;
-    if(previousInstance)
-    await SellingPrice.update({toDate: Date(), current: 0}, {where: {id: previousInstance.dataValues.id}})
+    if (previousInstance)
+      await SellingPrice.update(
+        { toDate: Date(), current: 0 },
+        { where: { id: previousInstance.dataValues.id } }
+      );
     await SellingPrice.create(data);
   } catch (err) {
     dialog.showErrorBox("An error message", err.message);
@@ -53,16 +59,20 @@ ipcMain.on("save-selling-price", async (event, recievedData) => {
 
 ipcMain.on("save-cost-price", async (event, recievedData) => {
   try {
-    const itemId = recievedData.itemId, data = recievedData.costPrice;
+    const itemId = recievedData.itemId,
+      data = recievedData.costPrice;
     const previousInstance = await CostPrice.findOne({
       where: {
         itemId,
-        current: 1
-    }
+        current: 1,
+      },
     });
     data.current = 1;
-    if(previousInstance)
-    await CostPrice.update({toDate: Date(), current: 0}, {where: {id: previousInstance.dataValues.id}})
+    if (previousInstance)
+      await CostPrice.update(
+        { toDate: Date(), current: 0 },
+        { where: { id: previousInstance.dataValues.id } }
+      );
     await CostPrice.create(data);
   } catch (err) {
     dialog.showErrorBox("An error message", err.message);
@@ -100,24 +110,55 @@ ipcMain.on("update-item", async (event, data) => {
   }
 });
 
-ipcMain.on('delete-item', async(event, itemId) => {
+ipcMain.on("delete-item", async (event, itemId) => {
   const t = await sequelize.transaction();
-  try{
-    const sales = await SaleItemJunction.findAll({where: {itemId}, transaction: t});
-    const orders = await OrderItemJunction.findAll({where: {itemId}, transaction: t});
-    if(sales.length){
-      dialog.showErrorBox("Cannot delete item", 'Item is listed in sales, please remove all sales of this item to delete this item.');
-    }else if(orders.length){
-      dialog.showErrorBox("Cannot delete item", 'Item is listed in orders, please remove all orders of this item to delete this item.');
-    }else{
-      await SellingPrice.destroy({where: {itemId}, transaction: t});
-      await CostPrice.destroy({where: {itemId}, transaction: t});
-      await Item.destroy({where: {id: itemId}, transaction: t});
+  try {
+    const sales = await SaleItemJunction.findAll({
+      where: { itemId },
+      transaction: t,
+    });
+    const orders = await OrderItemJunction.findAll({
+      where: { itemId },
+      transaction: t,
+    });
+    if (sales.length) {
+      dialog.showErrorBox(
+        "Cannot delete item",
+        "Item is listed in sales, please remove all sales of this item to delete this item."
+      );
+    } else if (orders.length) {
+      dialog.showErrorBox(
+        "Cannot delete item",
+        "Item is listed in orders, please remove all orders of this item to delete this item."
+      );
+    } else {
+      await SellingPrice.destroy({ where: { itemId }, transaction: t });
+      await CostPrice.destroy({ where: { itemId }, transaction: t });
+      await Item.destroy({ where: { id: itemId }, transaction: t });
     }
     t.commit();
-    event.sender.send('item-deleted');
-  }catch(err){
+    event.sender.send("item-deleted");
+  } catch (err) {
     t.rollback();
     dialog.showErrorBox("An error message", err.message);
   }
-})
+});
+
+ipcMain.on("item-sales-loaded", async (event, itemId) => {
+  try {
+    const saleData = await SaleItemJunction.findAll({
+      where: { itemId },
+      attributes: [sequelize.fn("DISTINCT", sequelize.col("saleId")), "saleId"],
+      
+    });
+    // var sales = new Array();
+    // saleData.forEach(async (sale) => {
+    //   const {saleId} = sale.dataValues;
+    //   const fetchedSale = await Sale.findOne({where: {id: saleId}, attributes: ['id', 'total', 'paid', 'settled', 'salePlacedDate'], include: [{model: Customer, attributes: ['id', 'name']}]});
+    //   sales.push(fetchedSale.dataValues);
+    // });
+    // console.log(sales);
+  } catch (err) {
+    dialog.showErrorBox("An error message", err.message);
+  }
+});

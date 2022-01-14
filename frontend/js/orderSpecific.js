@@ -17,6 +17,26 @@ function convert(str) {
   return [date.getFullYear(), mnth, day].join("-");
 }
 
+document.querySelector('#delete-form-toggle').addEventListener('click', (e) => {
+  const href = e.target.getAttribute('href');
+  if(!href)
+  return;
+  if(document.querySelector('#confirm-deletion').style.display == 'none')
+  document.querySelector('#confirm-deletion').style.display = 'block';
+  else document.querySelector('#confirm-deletion').style.display = 'none';
+})
+document.querySelector('#delete').addEventListener('click', (e) => {
+  e.preventDefault();
+  ipcRenderer.send('delete-order', ({orderId, totalDeal: fetchedData.order.total, supplierId: fetchedData.order.supplierId}));
+})
+document.querySelector('#no-delete').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.querySelector('#delete-form-toggle').click();
+})
+ipcRenderer.on('order-deleted', () => {
+  window.location.href = './order.html';
+})
+
 const populateOrderData = (supplierArray) => {
   
   const dropdown = document.querySelector("#supplier-dropdown");
@@ -29,11 +49,16 @@ const populateOrderData = (supplierArray) => {
   dropdown.value = fetchedData.order.supplierId;
   document.querySelector('#page-heading').innerText = dropdown.options[dropdown.selectedIndex].innerHTML;
   if(fetchedData.order.settled === 0){
+    
+    document.querySelector('#delete-form-toggle').setAttribute('href', '#');
+    document.querySelector('#delete-form-toggle').classList.add('red-text');
+    document.querySelector('#delete-inst').innerText = 'It will remove all details related to this order.';
     document.querySelector('#settle-order').innerText = 'Mark as settled';
     document.querySelector('#settle-inst').innerText = 'Marking an order settled will add all the item quantities to your stock'
     document.querySelector('#settle-order').classList.add('blue-text');
   }else{
-
+    document.querySelector('#delete-form-toggle').classList.add('grey-text');
+    document.querySelector('#delete-inst').innerText = 'Only unsettled orders can be deleted';
     document.querySelector('#settle-order').innerText = 'Mark as not settled';
     document.querySelector('#settle-inst').innerText = 'Marking an order un-settled will subtract all the item quantities from your stock'
     document.querySelector('#settle-order').classList.add('red-text');
