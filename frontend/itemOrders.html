@@ -4,15 +4,28 @@
 
   <div class="col l10">
     <div style="padding: 15px 20px" class="card">
-      <h3>Sales</h3>
+      <h3>Order</h3>
     </div>
     <table class="striped">
       <thead>
-        <th>Name</th>
-        <th>Description</th>
+        <th>Customer</th>
+        <th>Total</th>
+        <th>Settled</th>
+        <th>Sale placed</th>
+        <th>Manage</th>
       </thead>
+  </thead>
       <tbody id="table-body"></tbody>
     </table>
+    <ul class="pagination center">
+      <li>
+        <a id="prev-button" href="#!"><i class="material-icons"><</i></a>
+      </li>
+      <li class="active"><a href="#!" id="current-page"></a></li>
+      <li>
+        <a id="next-button" href="#!"><i class="material-icons">></i></a>
+      </li>
+    </ul>
   </div>
   <div id="navbar"></div>
 </div>

@@ -3,8 +3,8 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const sequelize = require("./db");
 const { Op } = require("sequelize");
 const Sale = require("../models/saleModel");
-const CustomerTransaction = require('../models/customerTransactionModel')
-const SaleItemJunction = require('../models/saleItemJunction');
+const CustomerTransaction = require("../models/customerTransactionModel");
+const SaleItemJunction = require("../models/saleItemJunction");
 
 ipcMain.on("customer-specific-window-loaded", async (event, customerId) => {
   try {
@@ -16,17 +16,24 @@ ipcMain.on("customer-specific-window-loaded", async (event, customerId) => {
   }
 });
 
-ipcMain.on('fetch-sale-for-customer', async(event, {customerId, limit, pageNumber}) => {
-  try{  
-    const saleData = await Sale.findAndCountAll({where: {customerId}, limit, offset: (pageNumber-1)*limit});
-    const count = saleData.count;
-    const saleArray = [];
-    saleData.rows.forEach(sale => saleArray.push(sale.dataValues));
-    event.sender.send('sale-fetched-for-customer', {saleArray, count});
-  }catch(err){
-    dialog.showErrorBox("An error message", err.message);
+ipcMain.on(
+  "fetch-sale-for-customer",
+  async (event, { customerId, limit, pageNumber }) => {
+    try {
+      const saleData = await Sale.findAndCountAll({
+        where: { customerId },
+        limit,
+        offset: (pageNumber - 1) * limit,
+      });
+      const count = saleData.count;
+      const saleArray = [];
+      saleData.rows.forEach((sale) => saleArray.push(sale.dataValues));
+      event.sender.send("sale-fetched-for-customer", { saleArray, count });
+    } catch (err) {
+      dialog.showErrorBox("An error message", err.message);
+    }
   }
-})
+);
 
 ipcMain.on("update-customer", async (event, data) => {
   try {
@@ -38,28 +45,44 @@ ipcMain.on("update-customer", async (event, data) => {
   }
 });
 
-ipcMain.on('customer-transaction-window-loaded', async(event, customerId) => {
-  try{  
-    const customer = await Customer.findOne({where: {id: customerId}});
-    const customerTransaction = await CustomerTransaction.findAll({where: {customerId}, order: [["createdAt", "DESC"]],});
+ipcMain.on("customer-transaction-window-loaded", async (event, customerId) => {
+  try {
+    const customer = await Customer.findOne({ where: { id: customerId } });
+    const customerTransaction = await CustomerTransaction.findAll({
+      where: { customerId },
+      order: [["createdAt", "DESC"]],
+    });
     const customerTransactionArray = [];
-    customerTransaction.forEach( transaction => {
+    customerTransaction.forEach((transaction) => {
       customerTransactionArray.push(transaction.dataValues);
-    })
-    event.sender.send('customer-transaction-loaded', ({customer: customer.dataValues, transactions: customerTransactionArray}));
-  }catch(err){
+    });
+    event.sender.send("customer-transaction-loaded", {
+      customer: customer.dataValues,
+      transactions: customerTransactionArray,
+    });
+  } catch (err) {
     dialog.showErrorBox("An error message", err.message);
   }
-})
+});
 
-ipcMain.on('add-customer-history', async(event, data) => {
-  try{
+ipcMain.on("add-customer-history", async (event, data) => {
+  try {
+    
     await CustomerTransaction.create(data);
-    event.sender.send('customer-transaction-added');
-  }catch(err){
+    
+      const customer = await Customer.findOne({
+        where: { id: data.customerId },
+      });
+      const updatedData = {
+        totalDeal: customer.dataValues.totalDeal + parseInt(-1*data.paid),
+      };
+      await Customer.update(updatedData, { where: { id: data.customerId }});
+    
+    event.sender.send("customer-transaction-added");
+  } catch (err) {
     dialog.showErrorBox("An error message", err.message);
   }
-})
+});
 
 ipcMain.on("delete-customer", async (event, customerId) => {
   const t = await sequelize.transaction();

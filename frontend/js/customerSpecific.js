@@ -94,7 +94,7 @@ ipcRenderer.on("customer-data-fetched", (event, data) => {
   document.querySelector("#customer-state").value = fetchedData.state;
   document.querySelector("#customer-pin-code").value = fetchedData.pinCode;
   document.querySelector("#customer-gst").value = fetchedData.gst;
-  document.querySelector('#customer-previous-balance').value = fetchedData.totalDeal;
+  document.querySelector('#total-deal-details').innerText = `Total purchase amount so far ${fetchedData.totalDeal}`;
   document.querySelector("#customer-description").value =
     fetchedData.description;
   ipcRenderer.send("fetch-sale-for-customer", {
@@ -122,8 +122,7 @@ ipcRenderer.on("sale-fetched-for-customer", (event, { saleArray, count }) => {
     row.innerHTML = `<tr>
       <td>${sale.total}</td>
       <td>${sale.settled == 0 ? "Not settled" : "Settled"}</td>
-      <td>${sale.salePlacedDate.toDateString()}</td>
-      <td>${sale.saleExpectedDate.toDateString()}</td>
+      <td>${sale.salePlacedDate ? sale.salePlacedDate.toDateString(): 'No date'}</td>
       <td><a href="saleSpecific.html" class="transparent btn manage-button" id="${
         sale.id
       }"><abbr title="View">📝</abbr></a></td></tr>`;

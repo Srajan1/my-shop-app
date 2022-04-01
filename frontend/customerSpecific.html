@@ -5,7 +5,7 @@
   <div class="col l10">
     <div class="card">
       <h3 style="padding: 20px 0 0 15px" id="page-heading">Customers</h3>
-      <span  style="padding: 0 0 20px 15" id="deal-details"></span>
+      <span  style="padding: 0 0 20px 15" id="total-deal-details"></span>
       <div class="card-action">
         <a href="#" class="blue-text" id="update-customer-form-toggle"
           >Update customer details</a
@@ -63,11 +63,6 @@
         placeholder="Enter customer state"
       />
       <input
-        type="number"
-        id="customer-previous-balance"
-        placeholder="Enter previous balance of customer"
-      />
-      <input
         type="text"
         id="customer-description"
         placeholder="Enter customer description"
@@ -79,7 +74,6 @@
         <th>Total</th>
         <th>Settled</th>
         <th>Sale placed</th>
-        <th>Sale Expected on</th>
         <th>Manage</th>
       </thead>
       <tbody id="all-sale-table"></tbody>

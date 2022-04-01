@@ -8,7 +8,9 @@ const { Op } = require("sequelize");
 const SaleItemJunction = require("../models/saleItemJunction");
 const OrderItemJunction = require("../models/orderItemJunction");
 const Sale = require("../models/saleModel");
+const Order = require("../models/orderModel");
 const Customer = require("../models/customerModel");
+const Supplier = require("../models/supplierModel");
 
 ipcMain.on("item-specific-window-loaded", async (event, itemId) => {
   try {
@@ -96,7 +98,7 @@ ipcMain.on("fetch-prices", async (event, data) => {
     });
     event.sender.send("prices-fetched", { costPrices, sellingPrices });
   } catch (err) {
-    console.log(err);
+    
     dialog.showErrorBox("An error message", err.message);
   }
 });
@@ -144,20 +146,88 @@ ipcMain.on("delete-item", async (event, itemId) => {
   }
 });
 
-ipcMain.on("item-sales-loaded", async (event, itemId) => {
+ipcMain.on("item-sales-loaded", async (event, query) => {
+  const {limit, pageNumber, itemId} = query;
   try {
+    const countData = await SaleItemJunction.findAndCountAll({where: {itemId}});
+    const count = countData.count;
     const saleData = await SaleItemJunction.findAll({
+      order: [["createdAt", "DESC"]],
       where: { itemId },
+      limit,
+      offset: (pageNumber-1)*limit,
       attributes: [sequelize.fn("DISTINCT", sequelize.col("saleId")), "saleId"],
       
     });
-    // var sales = new Array();
-    // saleData.forEach(async (sale) => {
-    //   const {saleId} = sale.dataValues;
-    //   const fetchedSale = await Sale.findOne({where: {id: saleId}, attributes: ['id', 'total', 'paid', 'settled', 'salePlacedDate'], include: [{model: Customer, attributes: ['id', 'name']}]});
-    //   sales.push(fetchedSale.dataValues);
-    // });
-    // console.log(sales);
+    var sales = [];
+    var sz = saleData.length;
+    for(var i = 0; i<sz ;++i){
+      const saleId = saleData[i].dataValues.saleId;
+      const fetchedSale = await Sale.findOne({where: {id: saleId}, attributes: ['id', 'total', 'paid', 'settled', 'salePlacedDate'], include: [Customer]});
+      sales.push(fetchedSale.dataValues);
+    }
+    const completeData = [];
+    sales.forEach(sale => {
+      completeData.push(
+        {
+          Sale: {
+            id: sale.id,
+            total: sale.total,
+            settled: sale.settled,
+            date: sale.salePlacedDate
+          },
+          Customer: {
+            id: sale.Customer.dataValues.id,
+            name: sale.Customer.dataValues.name
+          }
+        }
+      )
+    })
+    event.sender.send('item-sales-fetched', {completeData, count});
+  } catch (err) {
+    dialog.showErrorBox("An error message", err.message);
+  }
+});
+
+
+ipcMain.on("item-orders-loaded", async (event, query) => {
+  const {limit, pageNumber, itemId} = query;
+  try {
+    const countData = await OrderItemJunction.findAndCountAll({where: {itemId}});
+    const count = countData.count;
+    const orderData = await OrderItemJunction.findAll({
+      order: [["createdAt", "DESC"]],
+      where: { itemId },
+      limit,
+      offset: (pageNumber-1)*limit,
+      attributes: [sequelize.fn("DISTINCT", sequelize.col("orderId")), "orderId"],
+      
+    });
+    var orders = [];
+    var sz = orderData.length;
+    for(var i = 0; i<sz ;++i){
+      const orderId = orderData[i].dataValues.orderId;
+      const fetchedOrder = await Order.findOne({where: {id: orderId}, attributes: ['id', 'total', 'paid', 'settled', 'orderPlacedDate'], include: [Supplier]});
+      orders.push(fetchedOrder.dataValues);
+    }
+    const completeData = [];
+    orders.forEach(order => {
+      completeData.push(
+        {
+          Order: {
+            id: order.id,
+            total: order.total,
+            settled: order.settled,
+            date: order.orderPlacedDate
+          },
+          Supplier: {
+            id: order.Supplier.dataValues.id,
+            name: order.Supplier.dataValues.name
+          }
+        }
+      )
+    })
+    event.sender.send('item-orders-fetched', {completeData, count});
   } catch (err) {
     dialog.showErrorBox("An error message", err.message);
   }

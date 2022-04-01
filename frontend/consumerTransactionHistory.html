@@ -1,29 +1,29 @@
 <div id="header"></div>
 <div id="content" class="row">
-  
-
   <div class="col l10">
     <div class="card">
       <h3 style="padding: 20px 0 0 15px">Transaction History</h3>
       <span style="padding: 0 0 20px 15px" id="page-heading"></span>
-      <br>
+      <br />
       <span style="padding: 0 0 20px 15px" id="paid-total"></span>
-      
+
       <div class="card-action">
-        <a href="#" class="blue-text" id="add-history"
-          >Add Transaction</a
-        >
-        <a href="#" class="green-text" id="download-excel"
-          >Download Excel</a
-        >
+        <a href="#" class="blue-text" id="add-history">Add Transaction</a>
+        <a href="#" class="green-text" id="download-excel">Download Excel</a>
       </div>
     </div>
-    
-    <form id="add-history-form" style="display: none;">
-        <input type="number" id="paid-amount" placeholder="Amount Paid">
-        <input type="date" id="paid-date" placeholder="Date">
-        <input type="text" id="payment-mode" placeholder="payment mode">
-        <button id="add-history-button" class="btn" type="submit">Add</button>
+
+    <form id="add-history-form" style="display: none">
+      <input type="number" id="paid-amount" placeholder="Amount Paid" />
+      <input type="date" id="paid-date" placeholder="Date" />
+      <input type="text" id="payment-mode" placeholder="payment mode" />
+      <label>
+        <input id="inDebt" type="checkbox" class="filled-in" />
+        <span>Mark this as debt given to customer</span>
+      </label>
+      <br />
+      <br />
+      <button id="add-history-button" class="btn" type="submit">Add</button>
     </form>
     <table class="striped">
       <thead>
@@ -43,5 +43,5 @@
   require("./partials/header.js");
   require("./partials/navbar.js");
   require("./partials/footer.js");
-  require('./js/consumerTransactionHistory.js')
+  require("./js/consumerTransactionHistory.js");
 </script>

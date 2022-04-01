@@ -3,11 +3,12 @@ const ipcRenderer = electron.ipcRenderer;
 const customerId = sessionStorage.getItem("customerId");
 const convertJsonToExcel = require('../partials/generateExcel');
 
-var fetchedData, totalPaid = 0;
+var fetchedData, totalPaid = 0, totalBorrowed = 0;
 
 document.querySelector("#add-history-button").addEventListener("click", (e) => {
   e.preventDefault();
-  const paid = document.querySelector("#paid-amount").value;
+  
+  var paid = document.querySelector("#paid-amount").value;
   const date = document.querySelector("#paid-date").value;
   const paymentMode = document.querySelector("#payment-mode").value;
   if (!paid)
@@ -15,18 +16,21 @@ document.querySelector("#add-history-button").addEventListener("click", (e) => {
       heading: "Amount not found",
       message: "Please input the amount",
     });
-  if (!date)
+  else if (!date)
     ipcRenderer.send("error-occured", {
       heading: "Date not found",
       message: "Please input the Date",
     });
+    else {
+      if(document.querySelector('#inDebt').checked)
+      paid *= -1;
   const history = {
     paid,
     date,
     paymentMode,
     customerId,
   };
-  ipcRenderer.send("add-customer-history", history);
+  ipcRenderer.send("add-customer-history", history);}
 });
 
 ipcRenderer.on("customer-transaction-added", () => {
@@ -54,23 +58,27 @@ document.querySelector('#add-history').addEventListener('click', () => {
 })
 
 ipcRenderer.on("customer-transaction-loaded", (event, data) => {
+  
   fetchedData = data;
   console.log(fetchedData);
-  document.querySelector(
-    "#page-heading"
-  ).innerText = `${fetchedData.customer.name} has bought from you total ₹${fetchedData.customer.totalDeal}`;
+  
   const tableBody = document.querySelector("#table-body");
   tableBody.innerHTML = "";
   fetchedData.transactions.forEach((transaction) => {
     var row = document.createElement("tr");
     row.innerHTML = `<tr><td>${transaction.paid}</td>
       <td>${transaction.date.toDateString()}</td>
-      <td>${transaction.paid}</td>
+      <td>${transaction.paymentMode}</td>
       </tr>`;
+      if(transaction.paid > 0)
       totalPaid+=transaction.paid;
+      else totalBorrowed -= transaction.paid
     tableBody.appendChild(row);
   });
-  document.querySelector('#paid-total').innerText = `You have been paid total ₹${totalPaid}`;
+  document.querySelector(
+    "#page-heading"
+  ).innerText = `${fetchedData.customer.name} has borrowed total ₹${totalBorrowed}`;
+  document.querySelector('#paid-total').innerText = `${fetchedData.customer.name} has paid total ₹${totalPaid}`;
 });
 
 document.addEventListener("DOMContentLoaded", () => {
