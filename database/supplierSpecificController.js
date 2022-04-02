@@ -71,6 +71,16 @@ ipcMain.on("update-supplier", async (event, data) => {
   }
 });
 
+ipcMain.on("delete-supplier-transaction", async (event, {transactionId}) => {
+  try {
+    
+    await SupplierTransaction.destroy({where: {id: transactionId}});
+    event.sender.send("supplier-transaction-added");
+  } catch (err) {
+    dialog.showErrorBox("An error message", err.message);
+  }
+});
+
 ipcMain.on("supplier-transaction-window-loaded", async (event, supplierId) => {
   try {
     const supplier = await Supplier.findOne({ where: { id: supplierId } });

@@ -15,11 +15,12 @@ document.querySelector("#add-history-button").addEventListener("click", (e) => {
       heading: "Amount not found",
       message: "Please input the amount",
     });
-  if (!date)
+  else if (!date)
     ipcRenderer.send("error-occured", {
       heading: "Date not found",
       message: "Please input the Date",
-    });
+    });else{
+      
   const history = {
     paid,
     date,
@@ -27,6 +28,7 @@ document.querySelector("#add-history-button").addEventListener("click", (e) => {
     supplierId,
   };
   ipcRenderer.send("add-supplier-history", history);
+    }
 });
 
 ipcRenderer.on("supplier-transaction-added", () => {
@@ -47,6 +49,15 @@ document.querySelector('#download-excel').addEventListener('click', () => {
   convertJsonToExcel(excelArray);
 })
 
+const manageFunction = () => {
+  const deleteButton = document.querySelectorAll('.delete-button');
+  for(var i = 0; i<deleteButton.length ;++i){
+    deleteButton[i].onclick = function(e) {
+      ipcRenderer.send('delete-supplier-transaction', {transactionId: e.target.id})
+    }
+  }
+}
+
 document.querySelector('#add-history').addEventListener('click', () => {
   if(document.querySelector('#add-history-form').style.display === 'none')
   document.querySelector('#add-history-form').style.display = 'block';
@@ -64,12 +75,14 @@ ipcRenderer.on("supplier-transaction-loaded", (event, data) => {
     var row = document.createElement("tr");
     row.innerHTML = `<tr><td>${transaction.paid}</td>
       <td>${transaction.date.toDateString()}</td>
-      <td>${transaction.paid}</td>
+      <td>${transaction.paymentMode}</td>
+      <td><a href="#" class="transparent btn delete-button"  id="${transaction.id}">❌</a></td>
       </tr>`;
       totalPaid+=transaction.paid;
     tableBody.appendChild(row);
   });
   document.querySelector('#paid-total').innerText = `You have paid total ₹${totalPaid}`;
+  manageFunction();
 });
 
 document.addEventListener("DOMContentLoaded", () => {

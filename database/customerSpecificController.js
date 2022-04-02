@@ -69,15 +69,16 @@ ipcMain.on("add-customer-history", async (event, data) => {
   try {
     
     await CustomerTransaction.create(data);
+    event.sender.send("customer-transaction-added");
+  } catch (err) {
+    dialog.showErrorBox("An error message", err.message);
+  }
+});
+
+ipcMain.on("delete-customer-transaction", async (event, {transactionId}) => {
+  try {
     
-      const customer = await Customer.findOne({
-        where: { id: data.customerId },
-      });
-      const updatedData = {
-        totalDeal: customer.dataValues.totalDeal + parseInt(-1*data.paid),
-      };
-      await Customer.update(updatedData, { where: { id: data.customerId }});
-    
+    await CustomerTransaction.destroy({where: {id: transactionId}});
     event.sender.send("customer-transaction-added");
   } catch (err) {
     dialog.showErrorBox("An error message", err.message);

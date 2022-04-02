@@ -95,7 +95,6 @@ ipcRenderer.on("supplier-data-fetched", (event, data) => {
     document.querySelector("#supplier-city").value = fetchedData.city;
     document.querySelector("#supplier-pin-code").value = fetchedData.pinCode;;
     document.querySelector("#supplier-state").value = fetchedData.state;
-    document.querySelector('#supplier-previous-balance').value = fetchedData.totalDeal;
   ipcRenderer.send("fetch-order-for-supplier", {
     supplierId,
     limit,

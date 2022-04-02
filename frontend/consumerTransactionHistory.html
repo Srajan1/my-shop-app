@@ -3,9 +3,11 @@
   <div class="col l10">
     <div class="card">
       <h3 style="padding: 20px 0 0 15px">Transaction History</h3>
-      <span style="padding: 0 0 20px 15px" id="page-heading"></span>
-      <br />
+      <span  style="padding: 0 0 20px 15" id="total-deal-details"></span>
+      <br>
       <span style="padding: 0 0 20px 15px" id="paid-total"></span>
+      <br />
+      <span style="padding: 0 0 20px 15px" id="page-heading"></span>
 
       <div class="card-action">
         <a href="#" class="blue-text" id="add-history">Add Transaction</a>
@@ -19,7 +21,7 @@
       <input type="text" id="payment-mode" placeholder="payment mode" />
       <label>
         <input id="inDebt" type="checkbox" class="filled-in" />
-        <span>Mark this as debt given to customer</span>
+        <span>Mark this amount as debt given to customer</span>
       </label>
       <br />
       <br />
@@ -30,6 +32,7 @@
         <th>Paid</th>
         <th>Date</th>
         <th>Payment Mode</th>
+        <th>Delete</th>
       </thead>
       <tbody id="table-body"></tbody>
     </table>
